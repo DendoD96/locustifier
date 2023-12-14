@@ -1,0 +1,5 @@
+exclude =
+    .git,
+    .github,
+    docs,
+    venv,
