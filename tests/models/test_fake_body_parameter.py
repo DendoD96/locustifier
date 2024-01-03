@@ -13,7 +13,7 @@ class TestFakeBodyParameter(unittest.TestCase):
     def test_invalid_body_parameter_value(self):
         """
         Test that creating a FakeBodyParameter with an invalid 'value'
-        parameter raises a ValidationError with the expected error message.
+        parameter raises a ValidationError.
         """
         with self.assertRaises(ValidationError):
             FakeBodyParameter(name="fake_argument", type="mycustomfaketype")
