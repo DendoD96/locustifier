@@ -21,7 +21,7 @@ class BaseParameter(BaseModel):
         type = values.get("type")
 
         if type == "list" and value is None:
-            raise ValueError("{{value}} is required when type is a list")
+            raise ValueError(f"{value} is required when type is a list")
 
         return value
 
