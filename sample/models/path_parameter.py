@@ -1,5 +1,12 @@
+from enum import Enum
 from typing import Literal
 from pydantic import BaseModel
+
+
+class PathParameterStyle(str, Enum):
+    simple = "simple"
+    label = "label"
+    matrix = "matrix"
 
 
 class PathParameter(BaseModel):
