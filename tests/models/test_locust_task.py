@@ -1,8 +1,5 @@
-from http import HTTPMethod
 import unittest
-
 from pydantic import ValidationError
-from sample.models.fake_body_parameter import FakeBodyParameter
 
 from sample.models.locust_task import LocustTask
 
@@ -18,10 +15,26 @@ class TestLocustTask(unittest.TestCase):
         the http method (method different from POST, PUT, PATCH)
         raises a ValidationError.
         """
+        data = {
+            "name": "fake",
+            "method": "GET",
+            "path": "/fake",
+            "req_body": {"name": "fake_argument", "type": "int"},
+        }
         with self.assertRaises(ValidationError):
-            LocustTask(
-                name="fake",
-                method=HTTPMethod.GET,
-                path="/fake",
-                req_body=[FakeBodyParameter(name="fake_argument", type="int")],
-            )
+            LocustTask(**data)
+
+    def test_simple_task_generation(self):
+        """Test creating an instance of LocustTask with valid input."""
+
+        data = {"name": "fake", "method": "GET", "path": "/fake"}
+
+        instance = LocustTask(**data)
+
+        # Assert that the instance is of MyModel
+        self.assertIsInstance(instance, LocustTask)
+
+        # Assert that the values match the input data
+        self.assertEqual(instance.name, data["name"])
+        self.assertEqual(instance.method, data["method"])
+        self.assertEqual(instance.path, data["path"])

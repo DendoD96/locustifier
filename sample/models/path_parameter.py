@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Literal
+from typing import Literal, Optional
 from pydantic import BaseModel
 
 
@@ -14,7 +14,7 @@ class PathParameter(BaseModel):
     # TODO: can also be an object, but OpenAPI serialization
     # seems not working in connexion.
     value: int | float | bool | str | list
-    style: Literal[
-        "simple", "label", "matrix"
+    style: Optional[
+        Literal["simple", "label", "matrix"]
     ] = "simple"  # Default from OpenAPI spec
-    explode: bool = False  # Default from OpenAPI spec
+    explode: Optional[bool] = False  # Default from OpenAPI spec

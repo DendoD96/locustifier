@@ -2,7 +2,7 @@ import unittest
 
 from pydantic import ValidationError
 
-from sample.models.fake_body_parameter import BaseParameter, FakeBodyParameter
+from sample.models.fake_body_parameter import FakeBodyParameter
 
 
 class TestFakeBodyParameter(unittest.TestCase):
@@ -15,8 +15,10 @@ class TestFakeBodyParameter(unittest.TestCase):
         Test that creating a FakeBodyParameter with an invalid 'value'
         parameter raises a ValidationError.
         """
+        data = {"name": "fake_argument", "type": "mycustomfaketype"}
+
         with self.assertRaises(ValidationError):
-            FakeBodyParameter(name="fake_argument", type="mycustomfaketype")
+            FakeBodyParameter(**data)
 
     def test_valid_primitive_body_parameter(self):
         """
@@ -24,10 +26,9 @@ class TestFakeBodyParameter(unittest.TestCase):
         does not raise any exceptions.
         """
         try:
+            data = {"name": "fake_argument", "type": "int"}
             self.assertIsInstance(
-                FakeBodyParameter(
-                    name="fake_argument", type="int"
-                ).generate_value(),
+                FakeBodyParameter(**data).generate_value(),
                 int,
             )
         except Exception as e:
@@ -39,14 +40,27 @@ class TestFakeBodyParameter(unittest.TestCase):
         does not raise any exceptions.
         """
         try:
+            data = {"name": "fake_date", "type": "str", "provider": "date"}
             self.assertRegex(
-                FakeBodyParameter(
-                    name="fake_date", type="str", provider="date"
-                ).generate_value(),
+                FakeBodyParameter(**data).generate_value(),
                 r"^\d{4}\-(0?[1-9]|1[012])\-(0?[1-9]|[12][0-9]|3[01])$",
             )
         except Exception as e:
             self.fail(f"Unexpected exception raised: {e}")
+
+    def test_missing_items_for_list_parameter(self):
+        """
+        Test that creating a FakeBodyParameter instance with missing items
+        for a list parameter raises a validation error.
+        """
+
+        data = {
+            "name": "fake_names",
+            "type": "list",
+            "provider": "first_name_nonbinary",
+        }
+        with self.assertRaises(ValidationError):
+            FakeBodyParameter(**data)
 
     def test_valid_list_value_parameter(self):
         """
@@ -54,15 +68,14 @@ class TestFakeBodyParameter(unittest.TestCase):
         does not raise any exceptions.
         """
         try:
+            data = {
+                "name": "fake_names",
+                "type": "list",
+                "items": {"type": "str"},
+                "provider": "first_name_nonbinary",
+            }
             self.assertEqual(
-                len(
-                    FakeBodyParameter(
-                        name="fake_names",
-                        type="list",
-                        items=BaseParameter(type="str"),
-                        provider="first_name_nonbinary",
-                    ).generate_value()
-                ),
+                len(FakeBodyParameter(**data).generate_value()),
                 10,
             )
         except Exception as e:
@@ -74,14 +87,13 @@ class TestFakeBodyParameter(unittest.TestCase):
         does not raise any exceptions.
         """
         try:
-            body_parameters = FakeBodyParameter(
-                name="fake_names",
-                type="list",
-                items=BaseParameter(
-                    type="list", items=BaseParameter(type="str")
-                ),
-                provider="first_name_nonbinary",
-            ).generate_value()
+            data = {
+                "name": "fake_names",
+                "type": "list",
+                "items": {"type": "list", "items": {"type": "str"}},
+                "provider": "first_name_nonbinary",
+            }
+            body_parameters = FakeBodyParameter(**data).generate_value()
 
             self.assertEqual(
                 len(body_parameters),
@@ -103,14 +115,15 @@ class TestFakeBodyParameter(unittest.TestCase):
         Test that creating a FakeBodyParameter with a list
         of a length greater than 900 raise a ValidationError.
         """
+        data = {
+            "name": "fake_names",
+            "type": "list",
+            "count": 1000,
+            "items": {"type": "str"},
+            "provider": "first_name_nonbinary",
+        }
         with self.assertRaises(ValidationError):
-            FakeBodyParameter(
-                name="fake_names",
-                type="list",
-                count=1000,
-                items=BaseParameter(type="str"),
-                provider="first_name_nonbinary",
-            ).generate_value()
+            FakeBodyParameter(**data).generate_value()
 
 
 if __name__ == "__main__":

@@ -15,5 +15,7 @@ class TestPathParameter(unittest.TestCase):
         Test that creating a PathParameter with an invalid 'style'
         property raises a ValidationError.
         """
+        data = {"name": "fake_argument", "value": 1, "style": "fake"}
+
         with self.assertRaises(ValidationError):
-            PathParameter(name="fake_argument", value=1, style="fake")
+            PathParameter(**data)

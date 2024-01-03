@@ -16,7 +16,7 @@ class BaseParameter(BaseModel):
     count: int = Field(default=10, lt=900)
     items: Optional["BaseParameter"] = None
 
-    @validator("count", "items", pre=True, always=True)
+    @validator("items", pre=True, always=True)
     def check_conditional_field(cls, value, values):
         type = values.get("type")
 
