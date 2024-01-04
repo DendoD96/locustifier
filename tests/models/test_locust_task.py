@@ -43,8 +43,7 @@ class TestLocustTask(unittest.TestCase):
 
     def test_request_code_generation_with_path_parameters(self):
         """
-        Test the generation of request code. This test ensures that
-        the generated request code matches the expected format.
+        Ensures that the generated request code matches the expected format.
         The request path contains path_params.
         """
         expected = """
@@ -81,8 +80,7 @@ class TestLocustTask(unittest.TestCase):
 
     def test_request_code_generation_without_path_parameters(self):
         """
-        Test the generation of request code. This test ensures that
-        the generated request code matches the expected format.
+        Ensures that the generated request code matches the expected format.
         """
         expected = """
         def update_user(client):
@@ -116,6 +114,10 @@ class TestLocustTask(unittest.TestCase):
         )
 
     def test_locust_task_code_generation(self):
+        """
+        Ensures that the generated Locust task codematches the expected
+        format.
+        """
         expected = """
             @task(1)
             def update_user(self):
