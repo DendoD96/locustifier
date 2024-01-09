@@ -8,13 +8,7 @@ from sample.models.path_parameter import PathParameter
 
 REQUEST_CODE_TEMPLATE = """
 def {function_name}(client):
-    client.request(
-        method='{method}',
-        url='{url}',
-        {optional_headers},
-        {optional_query_params},
-        {optional_req_body},
-    )
+    client.request(method='{method}', url='{url}', {optional_parameters})
 """
 
 LOCUST_TASK_CODE_TEMPLATE = """
@@ -55,22 +49,19 @@ class LocustTask(BaseModel):
             )
         return self.path
 
+    # TODO: Refactor
     def __get_optional_parameter(self) -> dict:
-        optional_parameters = {}
+        optional_parameters = ""
 
         if self.headers:
-            optional_parameters["optional_headers"] = f"headers={self.headers}"
+            optional_parameters += f"headers={self.headers}, "
         if self.query_params:
-            optional_parameters[
-                "optional_query_params"
-            ] = f"params={self.query_params}"
+            optional_parameters += f"params={self.query_params}, "
         if self.req_body:
             body_parameter_dict = {
                 param.name: param.generate_value() for param in self.req_body
             }
-            optional_parameters[
-                "optional_req_body"
-            ] = f"json={body_parameter_dict}"
+            optional_parameters += f"json={body_parameter_dict}"
 
         return optional_parameters
 
@@ -80,7 +71,7 @@ class LocustTask(BaseModel):
                 function_name=self.name,
                 method=self.method,
                 url=self.__get_request_path(),
-                **self.__get_optional_parameter(),
+                optional_parameters=self.__get_optional_parameter(),
             )
         )
 

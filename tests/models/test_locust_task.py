@@ -46,15 +46,15 @@ class TestLocustTask(unittest.TestCase):
         Ensures that the generated request code matches the expected format.
         The request path contains path_params.
         """
-        expected = """
+
+        expected = f"""
         def update_user(client):
-            client.request(
-                method='PUT',
-                url='/user/123',
-                headers={{'accept': 'application/json'}},
-                params={{'fake_query_param': 'fake'}},
-                json={{'name': '{generated_name}'}},
-            )
+            {(
+                "client.request(method='PUT', url='/user/123', "
+                "headers={{'accept': 'application/json'}}, "
+                "params={{'fake_query_param': 'fake'}}, "
+                "json={{'name': '{generated_name}'}})"
+            )}
         """
         data = {
             "name": "update_user",
@@ -67,6 +67,16 @@ class TestLocustTask(unittest.TestCase):
         }
         instance = LocustTask(**data)
         generated_request_code = instance.generate_request_code()
+        print(
+            generated_request_code,
+            textwrap.dedent(
+                expected.format(
+                    generated_name=re.search(
+                        r"json={'name': '([a-zA-Z]+)'}", generated_request_code
+                    ).group(1)
+                )
+            ),
+        )
         self.assertEqual(
             generated_request_code,
             textwrap.dedent(
@@ -82,15 +92,14 @@ class TestLocustTask(unittest.TestCase):
         """
         Ensures that the generated request code matches the expected format.
         """
-        expected = """
+        expected = f"""
         def update_user(client):
-            client.request(
-                method='POST',
-                url='/user',
-                headers={{'accept': 'application/json'}},
-                params={{'fake_query_param': 'fake'}},
-                json={{'name': '{generated_name}'}},
-            )
+            {(
+                "client.request(method='POST', url='/user', "
+                "headers={{'accept': 'application/json'}}, "
+                "params={{'fake_query_param': 'fake'}}, "
+                "json={{'name': '{generated_name}'}})"
+            )}
         """
         data = {
             "name": "update_user",
