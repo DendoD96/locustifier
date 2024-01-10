@@ -37,7 +37,7 @@ class TestLocustScenario(unittest.TestCase):
         """
         expected = """
             class UserScenario(HttpUser):
-                host = http://localhost:8080
+                host = 'http://localhost:8080'
                 tasks = [UserScenarioTasks]
                 wait_time = between(2, 5)
         """
@@ -63,7 +63,7 @@ class TestLocustScenario(unittest.TestCase):
         """
         expected = """
             class UserScenario(HttpUser):
-                host = http://localhost:8080
+                host = 'http://localhost:8080'
                 tasks = [UserScenarioTasks]
                 wait_time = between(2, 2)
         """

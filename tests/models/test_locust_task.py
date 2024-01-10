@@ -2,7 +2,7 @@ import re
 import textwrap
 import unittest
 from pydantic import ValidationError
-
+from black import FileMode, format_str
 from sample.models.locust_task import LocustTask
 
 
@@ -54,8 +54,8 @@ class TestLocustTask(unittest.TestCase):
                 "headers={{'accept': 'application/json'}}, "
                 "params={{'fake_query_param': 'fake'}}, "
                 "json={{'name': '{generated_name}'}})"
-            )}
-        """
+            )}"""
+
         data = {
             "name": "update_user",
             "method": "PUT",
@@ -67,24 +67,18 @@ class TestLocustTask(unittest.TestCase):
         }
         instance = LocustTask(**data)
         generated_request_code = instance.generate_request_code()
-        print(
-            generated_request_code,
-            textwrap.dedent(
-                expected.format(
-                    generated_name=re.search(
-                        r"json={'name': '([a-zA-Z]+)'}", generated_request_code
-                    ).group(1)
-                )
-            ),
-        )
         self.assertEqual(
             generated_request_code,
-            textwrap.dedent(
-                expected.format(
-                    generated_name=re.search(
-                        r"json={'name': '([a-zA-Z]+)'}", generated_request_code
-                    ).group(1)
-                )
+            format_str(
+                textwrap.dedent(
+                    expected.format(
+                        generated_name=re.search(
+                            r'json={"name": "([a-zA-Z]+)"}',
+                            generated_request_code,
+                        ).group(1)
+                    )
+                ),
+                mode=FileMode(),
             ),
         )
 
@@ -113,12 +107,16 @@ class TestLocustTask(unittest.TestCase):
         generated_request_code = instance.generate_request_code()
         self.assertEqual(
             generated_request_code,
-            textwrap.dedent(
-                expected.format(
-                    generated_name=re.search(
-                        r"json={'name': '([a-zA-Z]+)'}", generated_request_code
-                    ).group(1)
-                )
+            format_str(
+                textwrap.dedent(
+                    expected.format(
+                        generated_name=re.search(
+                            r'json={"name": "([a-zA-Z]+)"}',
+                            generated_request_code,
+                        ).group(1)
+                    )
+                ),
+                mode=FileMode(),
             ),
         )
 
@@ -127,10 +125,11 @@ class TestLocustTask(unittest.TestCase):
         Ensures that the generated Locust task codematches the expected
         format.
         """
-        expected = """
+        request_file = "requests"
+        expected = f"""
             @task(1)
             def update_user(self):
-                requests.update_user(self)
+                {request_file}.update_user(self)
         """
         data = {
             "name": "update_user",
@@ -139,8 +138,10 @@ class TestLocustTask(unittest.TestCase):
             "path_params": [{"name": "id", "value": "123"}],
         }
         instance = LocustTask(**data)
-        generated_locust_task_code = instance.generate_locust_task_code()
+        generated_locust_task_code = instance.generate_locust_task_code(
+            request_file
+        )
         self.assertEqual(
             generated_locust_task_code,
-            textwrap.dedent(expected),
+            format_str(textwrap.dedent(expected), mode=FileMode()),
         )

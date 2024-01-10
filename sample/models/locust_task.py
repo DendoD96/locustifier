@@ -3,7 +3,7 @@ import textwrap
 from typing import List, Optional
 from pydantic import BaseModel, validator
 from sample.models.fake_body_parameter import FakeBodyParameter
-
+from black import FileMode, format_str
 from sample.models.path_parameter import PathParameter
 
 REQUEST_CODE_TEMPLATE = """
@@ -14,7 +14,7 @@ def {function_name}(client):
 LOCUST_TASK_CODE_TEMPLATE = """
 @task({weight})
 def {task_name}(self):
-    requests.{task_name}(self)
+    {requests_file}.{task_name}(self)
 """
 
 
@@ -66,18 +66,26 @@ class LocustTask(BaseModel):
         return optional_parameters
 
     def generate_request_code(self):
-        return textwrap.dedent(
-            REQUEST_CODE_TEMPLATE.format(
-                function_name=self.name,
-                method=self.method,
-                url=self.__get_request_path(),
-                optional_parameters=self.__get_optional_parameter(),
-            )
+        return format_str(
+            textwrap.dedent(
+                REQUEST_CODE_TEMPLATE.format(
+                    function_name=self.name,
+                    method=self.method,
+                    url=self.__get_request_path(),
+                    optional_parameters=self.__get_optional_parameter(),
+                )
+            ),
+            mode=FileMode(),
         )
 
-    def generate_locust_task_code(self):
-        return textwrap.dedent(
-            LOCUST_TASK_CODE_TEMPLATE.format(
-                weight=self.weight, task_name=self.name
-            )
+    def generate_locust_task_code(self, requests_file: str):
+        return format_str(
+            textwrap.dedent(
+                LOCUST_TASK_CODE_TEMPLATE.format(
+                    requests_file=requests_file,
+                    weight=self.weight,
+                    task_name=self.name,
+                )
+            ),
+            mode=FileMode(),
         )
