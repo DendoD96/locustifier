@@ -1,35 +1,17 @@
 import json
 import os
-import textwrap
 from typing import List
+from sample.generators.scenario_generator import generate_scenario
 
-from black import FileMode, format_str
+from sample.generators.taskset_generator import generate_taskset
 
 from sample.models.locust_scenario import LocustScenario
-from sample.models.locust_task import LocustTask
 from sample.utils import string_to_snake_case, string_to_upper_camel_case
 
-SCENARIO_IMPORTS = """
-from locust import task, between, TaskSet
-"""
 GENERATED_FOLDER = "generated"
 REQUEST_FOLDER = os.path.join(GENERATED_FOLDER, "requests")
 LOCUSTFILES_FOLDER = os.path.join(GENERATED_FOLDER, "locustfiles")
 TASKS_FOLDER = os.path.join(LOCUSTFILES_FOLDER, "tasks")
-TASK_FILE_BASE_STRUCTURE = f"""
-from {REQUEST_FOLDER.replace(os.path.sep, ".")} import {{requests_file}}
-from locust import task, TaskSet
-
-
-class {{task_set_name}}(TaskSet):
-{{task_list}}
-"""
-SCENARIO_FILE_BASE_STRUCTURE = """
-from locust import HttpUser, between
-from {tasks_file} import {tasks_class}
-
-{scenario_code}
-"""
 
 
 class CodeGenerator:
@@ -47,12 +29,13 @@ class CodeGenerator:
             with open(os.path.join(folder, "__init__.py"), "w") as _:
                 pass
 
-    def __generate_requests(self, scenario_name: str, tasks: List[LocustTask]):
-        requests = [task.generate_request_code() for task in tasks]
+    def __generate_requests(self, scenario: LocustScenario):
+        scenario_name_snake_case: str = string_to_snake_case(scenario.name)
+        requests = [task.generate_request_code() for task in scenario.tasks]
         with open(
             os.path.join(
                 REQUEST_FOLDER,
-                f"{scenario_name}_requests.py",
+                f"{scenario_name_snake_case}_requests.py",
             ),
             "w",
         ) as requests_file:
@@ -60,35 +43,32 @@ class CodeGenerator:
                 "\n\n".join(requests),
             )
 
-    def __generate_tasks(self, scenario_name: str, tasks: List[LocustTask]):
-        scenario_name_snake_case = string_to_snake_case(scenario_name)
+    def __generate_tasks(self, scenario: LocustScenario):
+        scenario_name_snake_case = string_to_snake_case(scenario.name)
         requests_file = f"{scenario_name_snake_case}_requests"
-        tasks = [
-            task.generate_locust_task_code(requests_file) for task in tasks
-        ]
-        with open(
+        task_file_name = (
             os.path.join(
                 TASKS_FOLDER,
                 f"{scenario_name_snake_case}_tasks.py",
             ),
-            "w",
-        ) as tasks_file:
+        )
+        requests_module = (
+            f"{TASKS_FOLDER.replace(os.path.sep, '.')}.{task_file_name}"
+        )
+        taskset_name = f"{string_to_upper_camel_case(scenario.name)}Tasks"
+        with open("w", task_file_name) as tasks_file:
             tasks_file.write(
-                format_str(
-                    TASK_FILE_BASE_STRUCTURE.format(
-                        task_set_name=f"\
-                            {string_to_upper_camel_case(scenario_name)}Tasks",
-                        requests_file=requests_file,
-                        task_list=textwrap.indent("\n".join(tasks), "    "),
-                    ),
-                    mode=FileMode(),
+                generate_taskset(
+                    requests_file=scenario.tasks,
+                    requests_module=requests_module,
+                    requests_file=requests_file,
+                    taskset_name=taskset_name,
                 )
             )
 
     def ___generate_scenario(self, scenario: LocustScenario):
         scenario_name_snake_case = string_to_snake_case(scenario.name)
         tasks_file = f"{scenario_name_snake_case}_tasks"
-        scenario_code = scenario.generate_scenario_code()
         with open(
             os.path.join(
                 LOCUSTFILES_FOLDER,
@@ -96,17 +76,15 @@ class CodeGenerator:
             ),
             "w",
         ) as scenario_file:
+            taskset_module = (
+                f"{TASKS_FOLDER.replace(os.path.sep, '.')}.{tasks_file}"
+            )
+            taskset_class = f"{string_to_upper_camel_case(scenario.name)}Tasks"
             scenario_file.write(
-                format_str(
-                    SCENARIO_FILE_BASE_STRUCTURE.format(
-                        tasks_file=f"\
-                            {TASKS_FOLDER.replace(os.path.sep, '.')}.\
-                                {tasks_file}",
-                        tasks_class=f"\
-                            {string_to_upper_camel_case(scenario.name)}Tasks",
-                        scenario_code=scenario_code,
-                    ),
-                    mode=FileMode(),
+                generate_scenario(
+                    scenario=scenario,
+                    taskset_class=taskset_class,
+                    taskset_module=taskset_module,
                 )
             )
 
@@ -128,9 +106,6 @@ class CodeGenerator:
             ]
             self.__generate_base_structure()
             for scenario in scenarios:
-                snake_case_scenario_name = string_to_snake_case(scenario.name)
-                self.__generate_requests(
-                    snake_case_scenario_name, scenario.tasks
-                )
-                self.__generate_tasks(scenario.name, scenario.tasks)
+                self.__generate_requests(scenario)
+                self.__generate_tasks(scenario)
                 self.___generate_scenario(scenario)

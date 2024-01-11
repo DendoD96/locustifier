@@ -12,6 +12,16 @@ MAX_LIST_ELEM = 900
 
 
 class BaseParameter(BaseModel):
+    """
+    Pydantic model representing a base parameter for request bodies.
+
+    Attributes:
+        type (Literal["int", "float", "bool", "str", "list"]): The type of the\
+              parameter.
+        count (int): The number of items (used for lists).
+        items (Optional[BaseParameter]): Nested parameter for lists.
+    """
+
     type: Literal["int", "float", "bool", "str", "list"]
     count: int = Field(default=10, lt=900)
     items: Optional["BaseParameter"] = None
@@ -28,6 +38,13 @@ class BaseParameter(BaseModel):
     # NOTE: On parsing we should check the recursion limit and if the provider
     #       is suitable for choosen type
     def generate_value(self):
+        """
+        Generate a fake value based on the specified parameter.
+
+        Returns:
+            Any: The generated fake value.
+        """
+
         def recursive_generate_value(
             parameter: FakeBodyParameter | BaseParameter,
         ):
@@ -50,5 +67,14 @@ class BaseParameter(BaseModel):
 
 
 class FakeBodyParameter(BaseParameter):
+    """
+    Pydantic model representing a fake parameter for request bodies.
+
+    Attributes:
+        name (str): The name of the parameter.
+        provider (Optional[str]): The custom provider for generating\
+              fake values.
+    """
+
     name: str
     provider: Optional[str] = None

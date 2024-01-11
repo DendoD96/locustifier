@@ -10,6 +10,25 @@ class PathParameterStyle(str, Enum):
 
 
 class PathParameter(BaseModel):
+    """
+    Pydantic model representing a path parameter in a URL.
+
+    Attributes:
+        name (str): The name of the path parameter.
+        value (Union[int, float, bool, str, list]): The value of the path \
+            parameter.
+        style (Optional[Literal["simple", "label", "matrix"]]): The style of \
+            the path parameter.
+            Default is "simple" as per the OpenAPI specification.
+        explode (Optional[bool]): Whether the path parameter should be \
+            exploded.
+            Default is False as per the OpenAPI specification.
+
+    Note:
+        This class represents a path parameter in a URL, adhering to OpenAPI \
+            specifications.
+    """
+
     name: str
     # TODO: can also be an object, but OpenAPI serialization
     # seems not working in connexion. Need to support style and explode

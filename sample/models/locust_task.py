@@ -1,24 +1,32 @@
 from http import HTTPMethod
-import textwrap
 from typing import List, Optional
 from pydantic import BaseModel, validator
 from sample.models.fake_body_parameter import FakeBodyParameter
-from black import FileMode, format_str
 from sample.models.path_parameter import PathParameter
-
-REQUEST_CODE_TEMPLATE = """
-def {function_name}(client):
-    client.request(method='{method}', url='{url}', {optional_parameters})
-"""
-
-LOCUST_TASK_CODE_TEMPLATE = """
-@task({weight})
-def {task_name}(self):
-    {requests_file}.{task_name}(self)
-"""
 
 
 class LocustTask(BaseModel):
+    """
+    Pydantic model representing a Locust task with various properties.
+
+    Attributes:
+        name (str): The name of the Locust task.
+        method (HTTPMethod): The HTTP method for the task (GET, POST, etc.).
+        path (str): The URL path for the task.
+        path_params (Optional[List[PathParameter]]): Optional list of \
+            path parameters.
+        query_params (Optional[dict]): Optional dictionary of query parameters.
+        headers (Optional[dict]): Optional dictionary of headers.
+        weight (Optional[int]): The weight assigned to the task for \
+            task scheduling.
+        req_body (Optional[List[FakeBodyParameter]]): Optional list of \
+            fake body parameters.
+
+    Raises:
+        ValueError: If req_body is provided for unsupported HTTP methods \
+            (GET, DELETE, etc.).
+    """
+
     name: str
     method: HTTPMethod
     path: str
@@ -41,51 +49,3 @@ class LocustTask(BaseModel):
             )
 
         return value
-
-    def __get_request_path(self) -> str:
-        if self.path_params:
-            return self.path.format(
-                **{param.name: param.value for param in self.path_params}
-            )
-        return self.path
-
-    # TODO: Refactor
-    def __get_optional_parameter(self) -> dict:
-        optional_parameters = ""
-
-        if self.headers:
-            optional_parameters += f"headers={self.headers}, "
-        if self.query_params:
-            optional_parameters += f"params={self.query_params}, "
-        if self.req_body:
-            body_parameter_dict = {
-                param.name: param.generate_value() for param in self.req_body
-            }
-            optional_parameters += f"json={body_parameter_dict}"
-
-        return optional_parameters
-
-    def generate_request_code(self):
-        return format_str(
-            textwrap.dedent(
-                REQUEST_CODE_TEMPLATE.format(
-                    function_name=self.name,
-                    method=self.method,
-                    url=self.__get_request_path(),
-                    optional_parameters=self.__get_optional_parameter(),
-                )
-            ),
-            mode=FileMode(),
-        )
-
-    def generate_locust_task_code(self, requests_file: str):
-        return format_str(
-            textwrap.dedent(
-                LOCUST_TASK_CODE_TEMPLATE.format(
-                    requests_file=requests_file,
-                    weight=self.weight,
-                    task_name=self.name,
-                )
-            ),
-            mode=FileMode(),
-        )
