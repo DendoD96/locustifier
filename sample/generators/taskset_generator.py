@@ -37,9 +37,9 @@ def generate_taskset(
         str: The generated Locust TaskSet code.
     """
     tasks: List[str] = [
-        generate_locust_task_code(task) for task in taskset.tasks
+        generate_locust_task_code(task, requests_file)
+        for task in taskset.tasks
     ]
-
     return format_str(
         TASK_FILE_BASE_STRUCTURE.format(
             task_set_name=taskset_name,

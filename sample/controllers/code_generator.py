@@ -1,6 +1,7 @@
 import json
 import os
 from typing import List
+from sample.generators.request_generator import generate_request_code
 from sample.generators.scenario_generator import generate_scenario
 
 from sample.generators.taskset_generator import generate_taskset
@@ -31,7 +32,7 @@ class CodeGenerator:
 
     def __generate_requests(self, scenario: LocustScenario):
         scenario_name_snake_case: str = string_to_snake_case(scenario.name)
-        requests = [task.generate_request_code() for task in scenario.tasks]
+        requests = [generate_request_code(task) for task in scenario.tasks]
         with open(
             os.path.join(
                 REQUEST_FOLDER,
@@ -44,23 +45,18 @@ class CodeGenerator:
             )
 
     def __generate_tasks(self, scenario: LocustScenario):
-        scenario_name_snake_case = string_to_snake_case(scenario.name)
-        requests_file = f"{scenario_name_snake_case}_requests"
-        task_file_name = (
-            os.path.join(
-                TASKS_FOLDER,
-                f"{scenario_name_snake_case}_tasks.py",
-            ),
+        scenario_name_snake_case: str = string_to_snake_case(scenario.name)
+        requests_file: str = f"{scenario_name_snake_case}_requests"
+        task_file_name: str = os.path.join(
+            TASKS_FOLDER,
+            f"{scenario_name_snake_case}_tasks.py",
         )
-        requests_module = (
-            f"{TASKS_FOLDER.replace(os.path.sep, '.')}.{task_file_name}"
-        )
-        taskset_name = f"{string_to_upper_camel_case(scenario.name)}Tasks"
-        with open("w", task_file_name) as tasks_file:
+        taskset_name: str = f"{string_to_upper_camel_case(scenario.name)}Tasks"
+        with open(task_file_name, "w") as tasks_file:
             tasks_file.write(
                 generate_taskset(
-                    requests_file=scenario.tasks,
-                    requests_module=requests_module,
+                    taskset=scenario,
+                    requests_module=REQUEST_FOLDER.replace(os.path.sep, "."),
                     requests_file=requests_file,
                     taskset_name=taskset_name,
                 )

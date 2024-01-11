@@ -48,8 +48,14 @@ def generate_request_code(task: LocustTask) -> str:
             REQUEST_CODE_TEMPLATE.format(
                 function_name=task.name,
                 method=task.method,
-                url=__get_request_path(),
-                optional_parameters=__get_optional_parameter(),
+                url=__get_request_path(
+                    path_template=task.path, path_params=task.path_params
+                ),
+                optional_parameters=__get_optional_parameter(
+                    headers=task.headers,
+                    query_params=task.query_params,
+                    req_body=task.req_body,
+                ),
             )
         ),
         mode=FileMode(),

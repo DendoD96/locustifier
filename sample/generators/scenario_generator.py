@@ -1,12 +1,16 @@
 from black import FileMode, format_str
 from sample.models.locust_scenario import LocustScenario
+from sample.utils import string_to_upper_camel_case
 
 
 SCENARIO_FILE_BASE_STRUCTURE = """
 from locust import HttpUser, between
 from {taskset_module} import {taskset_class}
 
-{scenario_code}
+class {scenario_name}(HttpUser):
+    host = '{host}'
+    tasks = [{task_class}]
+    wait_time = between({min_wait}, {max_wait})
 """
 
 
@@ -25,12 +29,21 @@ def generate_scenario(
     Returns:
         str: The generated Locust scenario code.
     """
-    scenario_code = scenario.generate_scenario_code()
-    format_str(
+    scenario_name = string_to_upper_camel_case(scenario.name)
+
+    return format_str(
         SCENARIO_FILE_BASE_STRUCTURE.format(
             taskset_module=taskset_module,
             taskset_class=taskset_class,
-            scenario_code=scenario_code,
+            scenario_name=scenario_name,
+            host=scenario.host,
+            task_class=f"{scenario_name}Tasks",
+            min_wait=scenario.wait
+            if isinstance(scenario.wait, int)
+            else scenario.wait[0],
+            max_wait=scenario.wait
+            if isinstance(scenario.wait, int)
+            else scenario.wait[1],
         ),
         mode=FileMode(),
     )
