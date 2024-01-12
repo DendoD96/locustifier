@@ -21,7 +21,7 @@ class TestTaskGenerator(unittest.TestCase):
         expected = f"""
             @task(1)
             def update_user(self):
-                {request_file}.update_user(self)
+                {request_file}.update_user(self.client)
         """
         data = {
             "name": "update_user",

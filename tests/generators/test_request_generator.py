@@ -3,9 +3,9 @@ import textwrap
 import unittest
 
 from black import FileMode, format_str
-from sample.generators.request_generator import generate_request_code
+from sample.generators.request_generator import generate_requests_code
 
-from sample.models.locust_task import LocustTask
+from sample.models.locust_taskset import LocustTaskSet
 
 
 class TestRequestGenerator(unittest.TestCase):
@@ -19,37 +19,40 @@ class TestRequestGenerator(unittest.TestCase):
         The request path contains path_params.
         """
 
-        expected = f"""
+        expected = """
+        from fake.module import generate_value
+
         def update_user(client):
-            {(
-                "client.request(method='PUT', url='/user/123', "
-                "headers={{'accept': 'application/json'}}, "
-                "params={{'fake_query_param': 'fake'}}, "
-                "json={{'name': '{generated_name}'}})"
-            )}"""
+            client.request(
+                method="PUT",
+                url="/user/123",
+                headers={"accept": "application/json"},
+                params={"fake_query_param": "fake"},
+                json={"name": generate_value("str", None, 10, "None")},
+            )
+        """
 
         data = {
-            "name": "update_user",
-            "method": "PUT",
-            "path": "/user/{id}",
-            "path_params": [{"name": "id", "value": "123"}],
-            "headers": {"accept": "application/json"},
-            "query_params": {"fake_query_param": "fake"},
-            "req_body": [{"name": "name", "type": "str"}],
+            "tasks": [
+                {
+                    "name": "update_user",
+                    "method": "PUT",
+                    "path": "/user/{id}",
+                    "path_params": [{"name": "id", "value": "123"}],
+                    "headers": {"accept": "application/json"},
+                    "query_params": {"fake_query_param": "fake"},
+                    "req_body": [{"name": "name", "type": "str"}],
+                }
+            ]
         }
-        instance = LocustTask(**data)
-        generated_request_code = generate_request_code(instance)
+        instance = LocustTaskSet(**data)
+        generated_request_code = generate_requests_code(
+            "fake.module", instance
+        )
         self.assertEqual(
             generated_request_code,
             format_str(
-                textwrap.dedent(
-                    expected.format(
-                        generated_name=re.search(
-                            r'json={"name": "([a-zA-Z]+)"}',
-                            generated_request_code,
-                        ).group(1)
-                    )
-                ),
+                textwrap.dedent(expected),
                 mode=FileMode(),
             ),
         )
@@ -58,36 +61,46 @@ class TestRequestGenerator(unittest.TestCase):
         """
         Ensures that the generated request code matches the expected format.
         """
-        expected = f"""
-        def update_user(client):
-            {(
-                "client.request(method='POST', url='/user', "
-                "headers={{'accept': 'application/json'}}, "
-                "params={{'fake_query_param': 'fake'}}, "
-                "json={{'name': '{generated_name}'}})"
-            )}
+        expected = """
+            from fake.module import generate_value
+
+            def update_user(client):
+                client.request(
+                    method="POST",
+                    url="/user",
+                    headers={"accept": "application/json"},
+                    params={"fake_query_param": "fake"},
+                    json={"name": generate_value("str", None, 10, "None")},
+                )
         """
         data = {
-            "name": "update_user",
-            "method": "POST",
-            "path": "/user",
-            "headers": {"accept": "application/json"},
-            "query_params": {"fake_query_param": "fake"},
-            "req_body": [{"name": "name", "type": "str"}],
+            "tasks": [
+                {
+                    "name": "update_user",
+                    "method": "POST",
+                    "path": "/user",
+                    "headers": {"accept": "application/json"},
+                    "query_params": {"fake_query_param": "fake"},
+                    "req_body": [{"name": "name", "type": "str"}],
+                }
+            ]
         }
-        instance = LocustTask(**data)
-        generated_request_code = generate_request_code(instance)
+        instance = LocustTaskSet(**data)
+        generated_request_code = generate_requests_code(
+            "fake.module", instance
+        )
+        print(
+            "\n",
+            generated_request_code,
+            format_str(
+                textwrap.dedent(expected),
+                mode=FileMode(),
+            ),
+        )
         self.assertEqual(
             generated_request_code,
             format_str(
-                textwrap.dedent(
-                    expected.format(
-                        generated_name=re.search(
-                            r'json={"name": "([a-zA-Z]+)"}',
-                            generated_request_code,
-                        ).group(1)
-                    )
-                ),
+                textwrap.dedent(expected),
                 mode=FileMode(),
             ),
         )

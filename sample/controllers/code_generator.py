@@ -1,7 +1,8 @@
 import json
 import os
+import shutil
 from typing import List
-from sample.generators.request_generator import generate_request_code
+from sample.generators.request_generator import generate_requests_code
 from sample.generators.scenario_generator import generate_scenario
 
 from sample.generators.taskset_generator import generate_taskset
@@ -9,6 +10,8 @@ from sample.generators.taskset_generator import generate_taskset
 from sample.models.locust_scenario import LocustScenario
 from sample.utils import string_to_snake_case, string_to_upper_camel_case
 
+STATIC_CODE_FOLDER = "static"
+REQUEST_UTILS_FILE_NAME = "utils"
 GENERATED_FOLDER = "generated"
 REQUEST_FOLDER = os.path.join(GENERATED_FOLDER, "requests")
 LOCUSTFILES_FOLDER = os.path.join(GENERATED_FOLDER, "locustfiles")
@@ -32,7 +35,6 @@ class CodeGenerator:
 
     def __generate_requests(self, scenario: LocustScenario):
         scenario_name_snake_case: str = string_to_snake_case(scenario.name)
-        requests = [generate_request_code(task) for task in scenario.tasks]
         with open(
             os.path.join(
                 REQUEST_FOLDER,
@@ -40,8 +42,13 @@ class CodeGenerator:
             ),
             "w",
         ) as requests_file:
+            requests_module = REQUEST_FOLDER.replace(os.path.sep, ".")
             requests_file.write(
-                "\n\n".join(requests),
+                generate_requests_code(
+                    request_utils_module=f"{requests_module}.\
+                        {REQUEST_UTILS_FILE_NAME}",
+                    taskset=scenario,
+                )
             )
 
     def __generate_tasks(self, scenario: LocustScenario):
@@ -101,6 +108,9 @@ class CodeGenerator:
                 LocustScenario(**scenario) for scenario in json_file_content
             ]
             self.__generate_base_structure()
+            shutil.copytree(
+                STATIC_CODE_FOLDER, GENERATED_FOLDER, dirs_exist_ok=True
+            )
             for scenario in scenarios:
                 self.__generate_requests(scenario)
                 self.__generate_tasks(scenario)

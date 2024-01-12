@@ -7,7 +7,7 @@ from sample.models.locust_task import LocustTask
 LOCUST_TASK_CODE_TEMPLATE = """
 @task({weight})
 def {task_name}(self):
-    {requests_file}.{task_name}(self)
+    {requests_file}.{task_name}(self.client)
 """
 
 

@@ -1,14 +1,5 @@
 from typing import Optional, Literal
 from pydantic import BaseModel, Field, validator
-from sample.utils import fake
-
-BASIC_PROVIDER = {
-    "int": "random_int",
-    "float": "pyfloat",
-    "bool": "pybool",
-    "str": "word",
-}
-MAX_LIST_ELEM = 900
 
 
 class BaseParameter(BaseModel):
@@ -22,7 +13,7 @@ class BaseParameter(BaseModel):
         items (Optional[BaseParameter]): Nested parameter for lists.
     """
 
-    type: Literal["int", "float", "bool", "str", "list"]
+    type: Literal["int", "float", "bool", "str", "list", "uuid"]
     count: int = Field(default=10, lt=900)
     items: Optional["BaseParameter"] = None
 
@@ -34,36 +25,6 @@ class BaseParameter(BaseModel):
             raise ValueError(f"{value} is required when type is a list")
 
         return value
-
-    # NOTE: On parsing we should check the recursion limit and if the provider
-    #       is suitable for choosen type
-    def generate_value(self):
-        """
-        Generate a fake value based on the specified parameter.
-
-        Returns:
-            Any: The generated fake value.
-        """
-
-        def recursive_generate_value(
-            parameter: FakeBodyParameter | BaseParameter,
-        ):
-            if parameter.type in ["int", "float", "bool", "str"]:
-                generator = getattr(
-                    fake,
-                    self.provider
-                    if self.provider
-                    else BASIC_PROVIDER[self.type],
-                    None,
-                )
-                return generator()
-
-            return [
-                recursive_generate_value(parameter.items)
-                for _ in range(parameter.count)
-            ]
-
-        return recursive_generate_value(self)
 
 
 class FakeBodyParameter(BaseParameter):
