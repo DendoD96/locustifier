@@ -2,6 +2,8 @@ import json
 import os
 import shutil
 from typing import List
+
+from pydantic import ValidationError
 from sample.generators.request_generator import generate_requests_code
 from sample.generators.scenario_generator import generate_scenario
 
@@ -14,8 +16,11 @@ STATIC_CODE_FOLDER = "static"
 REQUEST_UTILS_FILE_NAME = "utils"
 GENERATED_FOLDER = "generated"
 REQUEST_FOLDER = os.path.join(GENERATED_FOLDER, "requests")
+REQUEST_FILE_TEMPLATE = "{scenario_name_snake_case}_requests"
 LOCUSTFILES_FOLDER = os.path.join(GENERATED_FOLDER, "locustfiles")
 TASKS_FOLDER = os.path.join(LOCUSTFILES_FOLDER, "tasks")
+TASKSET_CLASS_TEMPLATE = "{scenario_name_upper_camel_case}Tasks"
+TASKSET_FILE_TEMPLATE = "{scenario_name_snake_case}_tasks"
 
 
 class CodeGenerator:
@@ -33,74 +38,87 @@ class CodeGenerator:
             with open(os.path.join(folder, "__init__.py"), "w") as _:
                 pass
 
-    def __generate_requests(self, scenario: LocustScenario):
-        scenario_name_snake_case: str = string_to_snake_case(scenario.name)
-        with open(
-            os.path.join(
-                REQUEST_FOLDER,
-                f"{scenario_name_snake_case}_requests.py",
-            ),
-            "w",
-        ) as requests_file:
-            requests_module = REQUEST_FOLDER.replace(os.path.sep, ".")
-            requests_file.write(
-                generate_requests_code(
-                    request_utils_module=f"{requests_module}.\
+    def __generate_requests(self, scenario: LocustScenario) -> str:
+        requests_module = REQUEST_FOLDER.replace(os.path.sep, ".")
+        return generate_requests_code(
+            request_utils_module=f"{requests_module}.\
                         {REQUEST_UTILS_FILE_NAME}",
-                    taskset=scenario,
-                )
-            )
-
-    def __generate_tasks(self, scenario: LocustScenario):
-        scenario_name_snake_case: str = string_to_snake_case(scenario.name)
-        requests_file: str = f"{scenario_name_snake_case}_requests"
-        task_file_name: str = os.path.join(
-            TASKS_FOLDER,
-            f"{scenario_name_snake_case}_tasks.py",
+            taskset=scenario,
         )
-        taskset_name: str = f"{string_to_upper_camel_case(scenario.name)}Tasks"
-        with open(task_file_name, "w") as tasks_file:
-            tasks_file.write(
-                generate_taskset(
-                    taskset=scenario,
-                    requests_module=REQUEST_FOLDER.replace(os.path.sep, "."),
-                    requests_file=requests_file,
-                    taskset_name=taskset_name,
-                )
-            )
 
-    def ___generate_scenario(self, scenario: LocustScenario):
+    def __generate_tasks(self, scenario: LocustScenario) -> str:
+        scenario_name_snake_case: str = string_to_snake_case(scenario.name)
+        requests_file: str = REQUEST_FILE_TEMPLATE.format(
+            scenario_name_snake_case=scenario_name_snake_case
+        )
+        taskset_name: str = TASKSET_FILE_TEMPLATE.format(
+            scenario_name_snake_case=string_to_upper_camel_case(scenario.name)
+        )
+        return generate_taskset(
+            taskset=scenario,
+            requests_module=REQUEST_FOLDER.replace(os.path.sep, "."),
+            requests_file=requests_file,
+            taskset_name=taskset_name,
+        )
+
+    def ___generate_scenario(self, scenario: LocustScenario) -> str:
         scenario_name_snake_case = string_to_snake_case(scenario.name)
-        tasks_file = f"{scenario_name_snake_case}_tasks"
-        with open(
-            os.path.join(
-                LOCUSTFILES_FOLDER,
-                f"{scenario_name_snake_case}.py",
+        tasks_file = TASKSET_FILE_TEMPLATE.format(
+            scenario_name_snake_case=scenario_name_snake_case
+        )
+        taskset_module = (
+            f"{TASKS_FOLDER.replace(os.path.sep, '.')}.{tasks_file}"
+        )
+        taskset_class = TASKSET_CLASS_TEMPLATE.format(
+            scenario_name_upper_camel_case=string_to_upper_camel_case(
+                scenario.name
+            )
+        )
+        return generate_scenario(
+            scenario=scenario,
+            taskset_class=taskset_class,
+            taskset_module=taskset_module,
+        )
+
+    def __get_requests_file_path(self, scenario_name_snake_case: str) -> str:
+        request_file: str = REQUEST_FILE_TEMPLATE.format(
+            scenario_name_snake_case=scenario_name_snake_case
+        )
+        return os.path.join(REQUEST_FOLDER, f"{request_file}.py")
+
+    def __get_taskset_file_path(self, scenario_name_snake_case: str) -> str:
+        return os.path.join(
+            TASKS_FOLDER,
+            TASKSET_FILE_TEMPLATE.format(
+                scenario_name_snake_case=scenario_name_snake_case
             ),
-            "w",
-        ) as scenario_file:
-            taskset_module = (
-                f"{TASKS_FOLDER.replace(os.path.sep, '.')}.{tasks_file}"
+        )
+
+    def __get_scenario_file_path(self, scenario_name_snake_case: str) -> str:
+        return os.path.join(
+            LOCUSTFILES_FOLDER,
+            f"{scenario_name_snake_case}.py",
+        )
+
+    def __write_file(self, file_name: str, file_content: str):
+        try:
+            with open(file_name, "w") as file:
+                file.write(file_content)
+        except FileNotFoundError:
+            print(f"Error: {file_name} not found.")
+            exit(1)
+        except PermissionError:
+            print(f"Error: Permission denied for {file_name}.")
+            exit(1)
+        except Exception as e:
+            print(
+                f"Unexpected error occurred while writing to {file_name}: {e}"
             )
-            taskset_class = f"{string_to_upper_camel_case(scenario.name)}Tasks"
-            scenario_file.write(
-                generate_scenario(
-                    scenario=scenario,
-                    taskset_class=taskset_class,
-                    taskset_module=taskset_module,
-                )
-            )
+            exit(1)
 
     def generate(self):
         """
         Parse the JSON specifications file and generate the output files.
-
-        Raises:
-        - FileNotFoundError: If the specified JSON file does not exist.
-        - PermissionError: If there is a permission error while
-          trying to open the JSON file.
-        - ValidationError: If the parsed JSON does not conform to
-          the LocustScenario Pydantic model.
         """
         with open(self.json_specification_file_path, "r") as json_file_buffer:
             json_file_content: List[dict] = json.load(json_file_buffer)
@@ -111,7 +129,24 @@ class CodeGenerator:
             shutil.copytree(
                 STATIC_CODE_FOLDER, GENERATED_FOLDER, dirs_exist_ok=True
             )
+            file_name_to_content = {}
             for scenario in scenarios:
-                self.__generate_requests(scenario)
-                self.__generate_tasks(scenario)
-                self.___generate_scenario(scenario)
+                scenario_name_snake_case = string_to_snake_case(scenario.name)
+                try:
+                    file_name_to_content[
+                        self.__get_requests_file_path(scenario_name_snake_case)
+                    ] = self.__generate_requests(scenario)
+                    file_name_to_content[
+                        self.__get_taskset_file_path(scenario_name_snake_case)
+                    ] = self.__generate_tasks(scenario)
+                    file_name_to_content[
+                        self.__get_scenario_file_path(scenario_name_snake_case)
+                    ] = self.___generate_scenario(scenario)
+                except ValidationError as e:
+                    print(f"Validation error in scenario {scenario.name}: {e}")
+                    exit(1)
+                # except Exception as e:
+                #     print(f"An unexpected error occurred: {e}")
+                #     exit(1)
+            for file_name, file_content in file_name_to_content.items():
+                self.__write_file(file_name, file_content)
