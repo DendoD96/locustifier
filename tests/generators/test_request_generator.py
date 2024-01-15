@@ -88,14 +88,6 @@ class TestRequestGenerator(unittest.TestCase):
         generated_request_code = generate_requests_code(
             "fake.module", instance
         )
-        print(
-            "\n",
-            generated_request_code,
-            format_str(
-                textwrap.dedent(expected),
-                mode=FileMode(),
-            ),
-        )
         self.assertEqual(
             generated_request_code,
             format_str(
