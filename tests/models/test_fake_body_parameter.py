@@ -34,6 +34,20 @@ class TestFakeBodyParameter(unittest.TestCase):
         except Exception as e:
             self.fail(f"Unexpected exception raised: {e}")
 
+    def test_missing_items_for_list_parameter(self):
+        """
+        Test that creating a FakeBodyParameter instance with missing items
+        for a list parameter raises a validation error.
+        """
+
+        data = {
+            "name": "fake_names",
+            "type": "list",
+            "provider": "first_name_nonbinary",
+        }
+        with self.assertRaises(ValidationError):
+            FakeBodyParameter(**data)
+
 
 if __name__ == "__main__":
     unittest.main()

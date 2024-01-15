@@ -14,7 +14,7 @@ class TestTaskGenerator(unittest.TestCase):
 
     def test_locust_task_code_generation(self):
         """
-        Ensures that the generated Locust task codematches the expected
+        Ensures that the generated Locust task code matches the expected
         format.
         """
         request_file = "requests"
