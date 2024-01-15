@@ -51,8 +51,10 @@ class CodeGenerator:
         requests_file: str = REQUEST_FILE_TEMPLATE.format(
             scenario_name_snake_case=scenario_name_snake_case
         )
-        taskset_name: str = TASKSET_FILE_TEMPLATE.format(
-            scenario_name_snake_case=string_to_upper_camel_case(scenario.name)
+        taskset_name: str = TASKSET_CLASS_TEMPLATE.format(
+            scenario_name_upper_camel_case=string_to_upper_camel_case(
+                scenario.name
+            )
         )
         return generate_taskset(
             taskset=scenario,
@@ -87,12 +89,11 @@ class CodeGenerator:
         return os.path.join(REQUEST_FOLDER, f"{request_file}.py")
 
     def __get_taskset_file_path(self, scenario_name_snake_case: str) -> str:
-        return os.path.join(
-            TASKS_FOLDER,
-            TASKSET_FILE_TEMPLATE.format(
-                scenario_name_snake_case=scenario_name_snake_case
-            ),
+        taskset_file_name = TASKSET_FILE_TEMPLATE.format(
+            scenario_name_snake_case=scenario_name_snake_case
         )
+
+        return os.path.join(TASKS_FOLDER, f"{taskset_file_name}.py")
 
     def __get_scenario_file_path(self, scenario_name_snake_case: str) -> str:
         return os.path.join(
@@ -145,8 +146,8 @@ class CodeGenerator:
                 except ValidationError as e:
                     print(f"Validation error in scenario {scenario.name}: {e}")
                     exit(1)
-                # except Exception as e:
-                #     print(f"An unexpected error occurred: {e}")
-                #     exit(1)
+                except Exception as e:
+                    print(f"An unexpected error occurred: {e}")
+                    exit(1)
             for file_name, file_content in file_name_to_content.items():
                 self.__write_file(file_name, file_content)
