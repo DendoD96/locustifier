@@ -35,7 +35,7 @@ def generate_value(
             return generator()
         return [
             recursive_generate_value(
-                parameter_type=items["type"],
+                parameter_type=items["parameter_type"],
                 items=items.get("items", None),
             )
             for _ in range(count)

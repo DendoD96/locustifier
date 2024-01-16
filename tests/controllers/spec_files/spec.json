@@ -35,22 +35,22 @@
                 "req_body": [
                     {
                         "name": "name",
-                        "type": "str",
+                        "parameter_type": "str",
                         "provider": "name_nonbinary"
                     },
                     {
                         "name": "lastname",
-                        "type": "str",
+                        "parameter_type": "str",
                         "provider": "last_name_nonbinary"
                     },
                     {
                         "name": "email",
-                        "type": "str",
+                        "parameter_type": "str",
                         "provider": "email"
                     },
                     {
                         "name": "id",
-                        "type": "uuid"
+                        "parameter_type": "uuid"
                     }
                 ],
                 "weight": 1

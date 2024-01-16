@@ -18,7 +18,7 @@ class TestLocustTask(unittest.TestCase):
             "name": "fake",
             "method": "GET",
             "path": "/fake",
-            "req_body": {"name": "fake_argument", "type": "int"},
+            "req_body": {"name": "fake_argument", "parameter_type": "int"},
         }
         with self.assertRaises(ValidationError):
             LocustTask(**data)

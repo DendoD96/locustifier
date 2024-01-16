@@ -36,7 +36,8 @@ def __get_optional_parameter(headers, query_params, req_body) -> dict:
         body_parameter_dict: str = ",".join(
             [
                 (
-                    f"'{param.name}': generate_value('{param.type}', "
+                    f"'{param.name}': generate_value('"
+                    f"{param.parameter_type}', "
                     f"{param.items}, {param.count}, "
                 )
                 + (f"'{param.provider}')" if param.provider else "None)")

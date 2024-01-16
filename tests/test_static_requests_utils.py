@@ -49,7 +49,7 @@ class TestStaticRequestUtils(unittest.TestCase):
                         provider="first_name_nonbinary",
                         parameter_type="list",
                         count=10,
-                        items={"type": "str"},
+                        items={"parameter_type": "str"},
                     )
                 ),
                 10,
@@ -67,7 +67,10 @@ class TestStaticRequestUtils(unittest.TestCase):
                 parameter_type="list",
                 count=10,
                 provider="first_name_nonbinary",
-                items={"type": "list", "items": {"type": "str"}},
+                items={
+                    "parameter_type": "list",
+                    "items": {"parameter_type": "str"},
+                },
             )
 
             self.assertEqual(

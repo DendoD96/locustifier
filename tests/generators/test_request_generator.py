@@ -40,7 +40,7 @@ class TestRequestGenerator(unittest.TestCase):
                     "path_params": [{"name": "id", "value": "123"}],
                     "headers": {"accept": "application/json"},
                     "query_params": {"fake_query_param": "fake"},
-                    "req_body": [{"name": "name", "type": "str"}],
+                    "req_body": [{"name": "name", "parameter_type": "str"}],
                 }
             ]
         }
@@ -80,7 +80,7 @@ class TestRequestGenerator(unittest.TestCase):
                     "path": "/user",
                     "headers": {"accept": "application/json"},
                     "query_params": {"fake_query_param": "fake"},
-                    "req_body": [{"name": "name", "type": "str"}],
+                    "req_body": [{"name": "name", "parameter_type": "str"}],
                 }
             ]
         }

@@ -35,7 +35,7 @@
                 "req_body": [
                     {
                         "name": "name",
-                        "type": "fake_type",
+                        "parameter_type": "fake_type",
                         "provider": "name_nonbinary"
                     }
                 ],

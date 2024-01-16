@@ -15,7 +15,7 @@ class TestFakeBodyParameter(unittest.TestCase):
         Test that creating a FakeBodyParameter with an invalid 'value'
         parameter raises a ValidationError.
         """
-        data = {"name": "fake_argument", "type": "mycustomfaketype"}
+        data = {"name": "fake_argument", "parameter_type": "mycustomfaketype"}
 
         with self.assertRaises(ValidationError):
             FakeBodyParameter(**data)
@@ -26,7 +26,7 @@ class TestFakeBodyParameter(unittest.TestCase):
         does not raise any exceptions.
         """
         try:
-            data = {"name": "fake_argument", "type": "int"}
+            data = {"name": "fake_argument", "parameter_type": "int"}
             self.assertIsInstance(
                 FakeBodyParameter(**data),
                 FakeBodyParameter,
@@ -42,7 +42,7 @@ class TestFakeBodyParameter(unittest.TestCase):
 
         data = {
             "name": "fake_names",
-            "type": "list",
+            "parameter_type": "list",
             "provider": "first_name_nonbinary",
         }
         with self.assertRaises(ValidationError):
@@ -55,9 +55,9 @@ class TestFakeBodyParameter(unittest.TestCase):
         """
         data = {
             "name": "fake_names",
-            "type": "list",
+            "parameter_type": "list",
             "count": 1000,
-            "items": {"type": "str"},
+            "items": {"parameter_type": "str"},
             "provider": "first_name_nonbinary",
         }
         with self.assertRaises(ValidationError):
