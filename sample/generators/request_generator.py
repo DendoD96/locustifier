@@ -81,6 +81,21 @@ def __generate_request_code(task: LocustTask) -> str:
 def generate_requests_code(
     request_utils_module, taskset: LocustTaskSet
 ) -> str:
+    """
+    Generate requests code.
+
+    This function takes the path to the request utilities module and a Locust
+    task set as input. It generates and returns the requests code based
+    for the provided task set.
+
+    Parameters:
+    - request_utils_module (str): The path to the request utilities module.
+    - taskset (LocustTaskSet): The Locust task set containing tasks for which
+      requests code should be generated.
+
+    Returns:
+    - str: The generated requests code as a string.
+    """
     return format_str(
         textwrap.dedent(
             REQUESTS_FILE_BASE_STRUCTURE.format(
