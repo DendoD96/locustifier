@@ -39,7 +39,6 @@ class TestFakeBodyParameter(unittest.TestCase):
         Test that creating a FakeBodyParameter instance with missing items
         for a list parameter raises a validation error.
         """
-
         data = {
             "name": "fake_names",
             "parameter_type": "list",

@@ -25,7 +25,6 @@ class TestLocustTask(unittest.TestCase):
 
     def test_simple_task_generation(self):
         """Test creating an instance of LocustTask with valid input."""
-
         data = {"name": "fake", "method": "GET", "path": "/fake"}
 
         instance = LocustTask(**data)

@@ -38,7 +38,8 @@ class TestCodeGenerator(unittest.TestCase):
         except Exception as e:
             print(f"An error occurred while removing the folder: {e}")
 
-    def test_code_generation(self):
+    @staticmethod
+    def test_code_generation():
         test_spec = "tests/controllers/spec_files/spec.json"
         generator = CodeGenerator(json_specification_file_path=test_spec)
         generator.generate()

@@ -9,7 +9,6 @@ class TestLocustScenario(unittest.TestCase):
 
     def test_simple_scenario_generation(self):
         """Test creating an instance of LocustScenario with valid input."""
-
         data = {
             "name": "user scenario",
             "description": """This scenario is created to test user

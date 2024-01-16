@@ -26,7 +26,8 @@ class CodeGenerator:
     def __init__(self, json_specification_file_path) -> None:
         self.json_specification_file_path = json_specification_file_path
 
-    def __generate_base_structure(self):
+    @staticmethod
+    def __generate_base_structure():
         # Create directories
         os.makedirs(REQUEST_FOLDER, exist_ok=True)
         os.makedirs(LOCUSTFILES_FOLDER, exist_ok=True)
@@ -37,7 +38,8 @@ class CodeGenerator:
             with open(os.path.join(folder, "__init__.py"), "w") as _:
                 pass
 
-    def __generate_requests(self, scenario: LocustScenario) -> str:
+    @staticmethod
+    def __generate_requests(scenario: LocustScenario) -> str:
         requests_module = REQUEST_FOLDER.replace(os.path.sep, ".")
         return generate_requests_code(
             request_utils_module=f"{requests_module}.\
@@ -45,7 +47,8 @@ class CodeGenerator:
             taskset=scenario,
         )
 
-    def __generate_tasks(self, scenario: LocustScenario) -> str:
+    @staticmethod
+    def __generate_tasks(scenario: LocustScenario) -> str:
         scenario_name_snake_case: str = string_to_snake_case(scenario.name)
         requests_file: str = REQUEST_FILE_TEMPLATE.format(
             scenario_name_snake_case=scenario_name_snake_case
@@ -62,7 +65,8 @@ class CodeGenerator:
             taskset_name=taskset_name,
         )
 
-    def ___generate_scenario(self, scenario: LocustScenario) -> str:
+    @staticmethod
+    def ___generate_scenario(scenario: LocustScenario) -> str:
         scenario_name_snake_case = string_to_snake_case(scenario.name)
         tasks_file = TASKSET_FILE_TEMPLATE.format(
             scenario_name_snake_case=scenario_name_snake_case
@@ -81,32 +85,35 @@ class CodeGenerator:
             taskset_module=taskset_module,
         )
 
-    def __get_requests_file_path(self, scenario_name_snake_case: str) -> str:
+    @staticmethod
+    def __get_requests_file_path(scenario_name_snake_case: str) -> str:
         request_file: str = REQUEST_FILE_TEMPLATE.format(
             scenario_name_snake_case=scenario_name_snake_case
         )
         return os.path.join(REQUEST_FOLDER, f"{request_file}.py")
 
-    def __get_taskset_file_path(self, scenario_name_snake_case: str) -> str:
+    @staticmethod
+    def __get_taskset_file_path(scenario_name_snake_case: str) -> str:
         taskset_file_name = TASKSET_FILE_TEMPLATE.format(
             scenario_name_snake_case=scenario_name_snake_case
         )
 
         return os.path.join(TASKS_FOLDER, f"{taskset_file_name}.py")
 
-    def __get_scenario_file_path(self, scenario_name_snake_case: str) -> str:
+    @staticmethod
+    def __get_scenario_file_path(scenario_name_snake_case: str) -> str:
         return os.path.join(
             LOCUSTFILES_FOLDER,
             f"{scenario_name_snake_case}.py",
         )
 
-    def __write_file(self, file_name: str, file_content: str):
+    @staticmethod
+    def __write_file(file_name: str, file_content: str):
         with open(file_name, "w") as file:
             file.write(file_content)
 
     def generate(self):
         """Parse the JSON specifications file and generate the output files."""
-
         with open(self.json_specification_file_path, "r") as json_file_buffer:
             json_file_content: List[dict] = json.load(json_file_buffer)
             scenarios: List[LocustScenario] = [

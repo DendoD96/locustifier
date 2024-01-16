@@ -17,7 +17,6 @@ class TestRequestGenerator(unittest.TestCase):
         Ensures that the generated request code matches the expected format.
         The request path contains path_params.
         """
-
         expected = """
         from fake.module import generate_value
 

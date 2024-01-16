@@ -59,7 +59,6 @@ def __generate_request_code(task: LocustTask) -> str:
     Returns:
         str: The generated locust request code.
     """
-
     return format_str(
         textwrap.dedent(
             REQUEST_CODE_TEMPLATE.format(

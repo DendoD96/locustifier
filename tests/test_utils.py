@@ -8,7 +8,8 @@ class TestUtils(unittest.TestCase):
     def shortDescription(self):
         return None
 
-    def test_string_to_upper_camel_case(self):
+    @staticmethod
+    def test_string_to_upper_camel_case():
         """
         Test string_to_upper_camel_case function.
 
@@ -24,7 +25,8 @@ class TestUtils(unittest.TestCase):
         upper_strings = [string_to_upper_camel_case(s) for s in strings]
         assert all(s == "TestUpper" for s in upper_strings)
 
-    def test_string_to_snake_case(self):
+    @staticmethod
+    def test_string_to_snake_case():
         """
         Test string_to_snake_case function.
 

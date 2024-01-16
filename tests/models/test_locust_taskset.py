@@ -11,7 +11,6 @@ class TestLocustTaskSet(unittest.TestCase):
 
     def test_simple_taskset_generation(self):
         """Test creating an instance of LocustTaskSet with valid input."""
-
         data = {
             "tasks": [
                 {
