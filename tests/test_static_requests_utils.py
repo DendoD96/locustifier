@@ -8,6 +8,22 @@ class TestStaticRequestUtils(unittest.TestCase):
     def shortDescription(self):
         return None
 
+    def test_valid_uuid_body_parameter_with_provider(self):
+        """
+        Test that creating a FakeBodyParameter with a uuid 'value'
+        does not raise any exceptions.
+        """
+        try:
+            self.assertRegex(
+                generate_value(parameter_type="uuid"),
+                (
+                    r"^[0-9(a-f|A-F)]{8}-[0-9(a-f|A-F)]{4}-4[0-9(a-f|A-F)]{3}-"
+                    r"[89ab][0-9(a-f|A-F)]{3}-[0-9(a-f|A-F)]{12}$"
+                ),
+            )
+        except Exception as e:
+            self.fail(f"Unexpected exception raised: {e}")
+
     def test_valid_primitive_body_parameter_with_provider(self):
         """
         Test that creating a FakeBodyParameter with a valid primitive 'value'
