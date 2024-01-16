@@ -3,7 +3,6 @@ import os
 import shutil
 from typing import List
 
-from pydantic import ValidationError
 from sample.generators.request_generator import generate_requests_code
 from sample.generators.scenario_generator import generate_scenario
 
@@ -102,20 +101,8 @@ class CodeGenerator:
         )
 
     def __write_file(self, file_name: str, file_content: str):
-        try:
-            with open(file_name, "w") as file:
-                file.write(file_content)
-        except FileNotFoundError:
-            print(f"Error: {file_name} not found.")
-            exit(1)
-        except PermissionError:
-            print(f"Error: Permission denied for {file_name}.")
-            exit(1)
-        except Exception as e:
-            print(
-                f"Unexpected error occurred while writing to {file_name}: {e}"
-            )
-            exit(1)
+        with open(file_name, "w") as file:
+            file.write(file_content)
 
     def generate(self):
         """
@@ -133,21 +120,15 @@ class CodeGenerator:
             file_name_to_content = {}
             for scenario in scenarios:
                 scenario_name_snake_case = string_to_snake_case(scenario.name)
-                try:
-                    file_name_to_content[
-                        self.__get_requests_file_path(scenario_name_snake_case)
-                    ] = self.__generate_requests(scenario)
-                    file_name_to_content[
-                        self.__get_taskset_file_path(scenario_name_snake_case)
-                    ] = self.__generate_tasks(scenario)
-                    file_name_to_content[
-                        self.__get_scenario_file_path(scenario_name_snake_case)
-                    ] = self.___generate_scenario(scenario)
-                except ValidationError as e:
-                    print(f"Validation error in scenario {scenario.name}: {e}")
-                    exit(1)
-                except Exception as e:
-                    print(f"An unexpected error occurred: {e}")
-                    exit(1)
+                file_name_to_content[
+                    self.__get_requests_file_path(scenario_name_snake_case)
+                ] = self.__generate_requests(scenario)
+                file_name_to_content[
+                    self.__get_taskset_file_path(scenario_name_snake_case)
+                ] = self.__generate_tasks(scenario)
+                file_name_to_content[
+                    self.__get_scenario_file_path(scenario_name_snake_case)
+                ] = self.___generate_scenario(scenario)
+
             for file_name, file_content in file_name_to_content.items():
                 self.__write_file(file_name, file_content)
