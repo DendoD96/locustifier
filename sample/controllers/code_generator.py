@@ -30,10 +30,12 @@ class CodeGenerator:
     and generates code files for Locust.
 
     Parameters:
-    - json_specification_file_path (str): The path to the JSON specifications file.
+    - json_specification_file_path (str): The path to the JSON
+    specifications file.
 
     Methods:
-    - generate: Parse the JSON specifications file and generate the output files.
+    - generate: Parse the JSON specifications file and generate the
+      output files.
 
     Private Methods:
     - __generate_base_structure: Generate the base directory structure and
@@ -41,13 +43,17 @@ class CodeGenerator:
     - __generate_requests: Generate Locust requests code for a given scenario.
     - __generate_tasks: Generate Locust task set code for a given scenario.
     - __generate_scenario: Generate Locust scenario code for a given scenario.
-    - __get_requests_file_path: Get the file path for the requests file of a scenario.
-    - __get_taskset_file_path: Get the file path for the task set file of a scenario.
-    - __get_scenario_file_path: Get the file path for the scenario file of a scenario.
+    - __get_requests_file_path: Get the file path for the requests file
+      of a scenario.
+    - __get_taskset_file_path: Get the file path for the task set file
+      of a scenario.
+    - __get_scenario_file_path: Get the file path for the scenario file
+      of a scenario.
     - __write_file: Write content to a file.
 
     Note:
-    The generated code files will be organized into specified folders and follow
+    The generated code files will be organized into specified
+      folders and follow
     a naming convention based on the names of scenarios.
     """
 
