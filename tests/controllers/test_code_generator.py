@@ -54,3 +54,7 @@ class TestCodeGenerator(unittest.TestCase):
             generator.generate()
 
         self.assertFalse(os.path.exists(GENERATED_FOLDER))
+
+
+if __name__ == "__main__":
+    unittest.main()

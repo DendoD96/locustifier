@@ -29,3 +29,7 @@ class TestLocustScenario(unittest.TestCase):
         self.assertEqual(instance.host, data["host"])
         self.assertEqual(instance.wait, data["wait"])
         self.assertEqual(len(instance.tasks), 1)
+
+
+if __name__ == "__main__":
+    unittest.main()

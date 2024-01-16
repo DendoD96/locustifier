@@ -27,7 +27,7 @@ class TestRequestGenerator(unittest.TestCase):
                 url="/user/123",
                 headers={"accept": "application/json"},
                 params={"fake_query_param": "fake"},
-                json={"name": generate_value("str", 10, "None")},
+                json={"name": generate_value("str", None, 10, None)},
             )
         """
 
@@ -69,7 +69,7 @@ class TestRequestGenerator(unittest.TestCase):
                     url="/user",
                     headers={"accept": "application/json"},
                     params={"fake_query_param": "fake"},
-                    json={"name": generate_value("str", 10, "None")},
+                    json={"name": generate_value("str", None, 10, None)},
                 )
         """
         data = {
@@ -95,3 +95,7 @@ class TestRequestGenerator(unittest.TestCase):
                 mode=FileMode(),
             ),
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -19,3 +19,7 @@ class TestPathParameter(unittest.TestCase):
 
         with self.assertRaises(ValidationError):
             PathParameter(**data)
+
+
+if __name__ == "__main__":
+    unittest.main()

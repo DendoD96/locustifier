@@ -37,3 +37,7 @@ class TestLocustTask(unittest.TestCase):
         self.assertEqual(instance.name, data["name"])
         self.assertEqual(instance.method, data["method"])
         self.assertEqual(instance.path, data["path"])
+
+
+if __name__ == "__main__":
+    unittest.main()

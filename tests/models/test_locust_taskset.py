@@ -39,3 +39,7 @@ class TestLocustTaskSet(unittest.TestCase):
 
         # Assert that the values match the input data
         self.assertEqual(len(instance.tasks), 2)
+
+
+if __name__ == "__main__":
+    unittest.main()

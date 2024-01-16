@@ -33,12 +33,15 @@ def __get_optional_parameter(headers, query_params, req_body) -> dict:
     if query_params:
         optional_parameters += f"params={query_params}, "
     if req_body:
+        for param in req_body:
+            print(param.name, param.provider)
         body_parameter_dict: str = ",".join(
             [
                 (
                     f"'{param.name}': generate_value('{param.type}', "
-                    f"{param.count}, '{param.provider}')"
+                    f"{param.items}, {param.count}, "
                 )
+                + (f"'{param.provider}')" if param.provider else "None)")
                 for param in req_body
             ]
         )

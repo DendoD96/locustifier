@@ -7,19 +7,23 @@ BASIC_PROVIDER = {
     "bool": "pybool",
     "str": "word",
 }
-MAX_LIST_ELEM = 900
 
 fake = Faker()
 
 
-def generate_value(parameter_type: str, count: int, provider: str):
+def generate_value(
+    parameter_type: str,
+    items: dict | None = None,
+    count: int = None,
+    provider: str | None = None,
+):
     """
     Generate a fake value based on the specified parameter.
     Returns:
         Any: The generated fake value.
     """
 
-    def recursive_generate_value():
+    def recursive_generate_value(parameter_type: str, items: dict | None):
         if parameter_type == "uuid":
             return str(uuid.uuid4())
         if parameter_type in ["int", "float", "bool", "str"]:
@@ -29,6 +33,12 @@ def generate_value(parameter_type: str, count: int, provider: str):
                 None,
             )
             return generator()
-        return [recursive_generate_value() for _ in range(count)]
+        return [
+            recursive_generate_value(
+                parameter_type=items["type"],
+                items=items.get("items", None),
+            )
+            for _ in range(count)
+        ]
 
-    return recursive_generate_value()
+    return recursive_generate_value(parameter_type, items)

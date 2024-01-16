@@ -37,3 +37,7 @@ class TestTaskGenerator(unittest.TestCase):
             generated_locust_task_code,
             format_str(textwrap.dedent(expected), mode=FileMode()),
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

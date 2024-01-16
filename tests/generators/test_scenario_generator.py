@@ -73,3 +73,7 @@ class TestScenarioGenerator(unittest.TestCase):
             generated_locust_scenario_code,
             format_str(textwrap.dedent(expected), mode=FileMode()),
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

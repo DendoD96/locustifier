@@ -48,6 +48,21 @@ class TestFakeBodyParameter(unittest.TestCase):
         with self.assertRaises(ValidationError):
             FakeBodyParameter(**data)
 
+    def test_max_list_elements(self):
+        """
+        Test that creating a FakeBodyParameter with a list
+        of a length greater than 900 raise a ValidationError.
+        """
+        data = {
+            "name": "fake_names",
+            "type": "list",
+            "count": 1000,
+            "items": {"type": "str"},
+            "provider": "first_name_nonbinary",
+        }
+        with self.assertRaises(ValidationError):
+            FakeBodyParameter(**data)
+
 
 if __name__ == "__main__":
     unittest.main()

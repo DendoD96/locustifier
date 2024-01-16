@@ -1,6 +1,8 @@
 from typing import Optional, Literal
 from pydantic import BaseModel, Field, validator
 
+MAX_LIST_ELEM = 900
+
 
 class BaseParameter(BaseModel):
     """
@@ -14,7 +16,7 @@ class BaseParameter(BaseModel):
     """
 
     type: Literal["int", "float", "bool", "str", "list", "uuid"]
-    count: int = Field(default=10, lt=900)
+    count: int = Field(default=10, lt=MAX_LIST_ELEM)
     items: Optional["BaseParameter"] = None
 
     @validator("items", pre=True, always=True)
