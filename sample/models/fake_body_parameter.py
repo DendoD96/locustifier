@@ -9,8 +9,8 @@ class BaseParameter(BaseModel):
     Pydantic model representing a base parameter for request bodies.
 
     Attributes:
-        parameter_type (Literal["int", "float", "bool", "str", "list"]): The parameter_type of the\
-              parameter.
+        parameter_type (Literal["int", "float", "bool", "str", "list"]): \
+            The parameter_type of the parameter.
         count (int): The number of items (used for lists).
         items (Optional[BaseParameter]): Nested parameter for lists.
     """
