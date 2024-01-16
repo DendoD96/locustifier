@@ -12,7 +12,7 @@ MAX_LIST_ELEM = 900
 fake = Faker()
 
 
-def generate_value(parameter_type: str, items: int, count: int, provider: str):
+def generate_value(parameter_type: str, count: int, provider: str):
     """
     Generate a fake value based on the specified parameter.
     Returns:
@@ -29,6 +29,6 @@ def generate_value(parameter_type: str, items: int, count: int, provider: str):
                 None,
             )
             return generator()
-        return [recursive_generate_value(items) for _ in range(count)]
+        return [recursive_generate_value() for _ in range(count)]
 
     return recursive_generate_value()

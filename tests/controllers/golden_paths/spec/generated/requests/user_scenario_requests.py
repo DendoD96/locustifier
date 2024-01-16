@@ -20,9 +20,9 @@ def add_user(client):
         method="POST",
         url="/users",
         json={
-            "name": generate_value("str", None, 10, "name_nonbinary"),
-            "lastname": generate_value("str", None, 10, "last_name_nonbinary"),
-            "email": generate_value("str", None, 10, "email"),
-            "id": generate_value("uuid", None, 10, "None"),
+            "name": generate_value("str", 10, "name_nonbinary"),
+            "lastname": generate_value("str", 10, "last_name_nonbinary"),
+            "email": generate_value("str", 10, "email"),
+            "id": generate_value("uuid", 10, "None"),
         },
     )
