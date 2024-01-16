@@ -105,9 +105,8 @@ class CodeGenerator:
             file.write(file_content)
 
     def generate(self):
-        """
-        Parse the JSON specifications file and generate the output files.
-        """
+        """Parse the JSON specifications file and generate the output files."""
+
         with open(self.json_specification_file_path, "r") as json_file_buffer:
             json_file_content: List[dict] = json.load(json_file_buffer)
             scenarios: List[LocustScenario] = [

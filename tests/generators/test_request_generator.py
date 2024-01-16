@@ -57,9 +57,8 @@ class TestRequestGenerator(unittest.TestCase):
         )
 
     def test_request_code_generation_without_path_parameters(self):
-        """
-        Ensures that the generated request code matches the expected format.
-        """
+        """Ensures that the generated request code matches the expected
+        format."""
         expected = """
             from fake.module import generate_value
 

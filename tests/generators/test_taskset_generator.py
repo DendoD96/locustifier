@@ -13,9 +13,7 @@ class TestTasksetGenerator(unittest.TestCase):
         return None
 
     def test_locust_taskset_code_generation(self):
-        """
-        Ensures that the generated code matches the expected structure.
-        """
+        """Ensures that the generated code matches the expected structure."""
         request_module = "request.module"
         request_file = "requests"
         taskset_name = "TaskSetName"

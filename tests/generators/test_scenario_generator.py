@@ -13,9 +13,8 @@ class TestScenarioGenerator(unittest.TestCase):
         return None
 
     def test_locust_scenario_code_generation_with_tuple_wait(self):
-        """
-        Test the generation of Locust scenario code with a tuple for wait_time.
-        """
+        """Test the generation of Locust scenario code with a tuple for
+        wait_time."""
         expected = """
             from locust import HttpUser, between
             from fake.module import UserScenario
@@ -44,9 +43,8 @@ class TestScenarioGenerator(unittest.TestCase):
         )
 
     def test_locust_scenario_code_generation_with_int_wait(self):
-        """
-        Test the generation of Locust scenario code with an int for wait_time.
-        """
+        """Test the generation of Locust scenario code with an int for
+        wait_time."""
         expected = """
             from locust import HttpUser, between
             from fake.module import UserScenario

@@ -30,8 +30,6 @@ class PathParameter(BaseModel):
     """
 
     name: str
-    # TODO: can also be an object, but OpenAPI serialization
-    # seems not working in connexion. Need to support style and explode
     value: int | float | bool | str | list
     style: Optional[
         Literal["simple", "label", "matrix"]
