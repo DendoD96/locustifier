@@ -1,0 +1,60 @@
+[
+    {
+        "name": "user_scenario",
+        "description": "This scenario is created to test user microservice",
+        "wait": [
+            2,
+            5
+        ],
+        "host": "http://localhost:8080",
+        "tasks": [
+            {
+                "name": "get_user",
+                "method": "GET",
+                "path": "/users/{id}",
+                "path_params": [
+                    {
+                        "name": "id",
+                        "value": "0326dce2-b212-427c-aa18-811648fb6594"
+                    }
+                ],
+                "query_params": {},
+                "headers": {},
+                "weight": 1
+            },
+            {
+                "name": "get_users",
+                "method": "GET",
+                "path": "/users",
+                "weight": 1
+            },
+            {
+                "name": "add_user",
+                "method": "POST",
+                "path": "/users",
+                "req_body": [
+                    {
+                        "name": "name",
+                        "parameter_type": "str",
+                        "provider": "name_nonbinary"
+                    },
+                    {
+                        "name": "lastname",
+                        "parameter_type": "str",
+                        "provider": "last_name_nonbinary"
+                    },
+                    {
+                        "name": "email",
+                        "parameter_type": "str",
+                        "provider": "email"
+                    },
+                    {
+                        "name": "id",
+                        "parameter_type": "uuid"
+                    }
+                ],
+                "weight": 1
+            }
+        ]
+    }
+]

@@ -32,6 +32,10 @@ lint: venv
 test: venv install-test
 	$(VENV_PYTHON) -m unittest discover -s tests -v
 
+test-coverage: venv install-test
+	coverage run -m unittest discover -s tests/
+	coverage xml
+
 clean:
 	rm -rf $(VENV_NAME) __pycache__ .pytest_cache
 
