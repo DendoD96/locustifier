@@ -24,6 +24,7 @@ jobs:
 
       - name: Run Python unit tests
         run: |
+          ls tests/controllers/golden_paths/
           coverage run -m unittest discover -s tests -v
 
       - name: Upload coverage to Codecov
