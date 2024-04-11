@@ -7,4 +7,4 @@
 [![DeepSource](https://app.deepsource.com/gh/DendoD96/locustifier.svg/?label=active+issues&show_trend=true&token=yqYe2ej2qWwMHU-7_NEI2dqc)](https://app.deepsource.com/gh/DendoD96/locustifier/)
 <br/><br/>
 
-JSOcusitfier is designed to streamline the process of generating Locustfiles from JSON specifications. Leveraging the power of JavaScript Object Notation (JSON), JSOcusitfier automates the conversion of JSON-based configurations into executable Locust test scripts.
+Locustifier is designed to streamline the process of generating Locustfiles from JSON or Yaml specifications. Locustifier automates the conversion of a specification file into executable Locust test scripts.

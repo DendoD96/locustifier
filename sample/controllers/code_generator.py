@@ -1,4 +1,5 @@
 import json
+import yaml
 import os
 import shutil
 from typing import List
@@ -30,7 +31,7 @@ class CodeGenerator:
     and generates code files for Locust.
 
     Parameters:
-    - json_specification_file_path (str): The path to the JSON
+    - specification_file_path (str): The path to the JSON
     specifications file.
 
     Methods:
@@ -57,8 +58,8 @@ class CodeGenerator:
     a naming convention based on the names of scenarios.
     """
 
-    def __init__(self, json_specification_file_path) -> None:
-        self.json_specification_file_path = json_specification_file_path
+    def __init__(self, specification_file_path) -> None:
+        self.specification_file_path = specification_file_path
 
     @staticmethod
     def __generate_base_structure():
@@ -146,29 +147,44 @@ class CodeGenerator:
         with open(file_name, "w") as file:
             file.write(file_content)
 
+    def __load_content(spec_file_path: str) -> List[dict]:
+        with open(spec_file_path, "r") as file_buffer:
+            content = file_buffer.read()
+            try:
+                return json.loads(content)
+            except json.JSONDecodeError:
+                pass
+
+            try:
+                return yaml.safe_load(content)
+            except yaml.YAMLError:
+                pass
+
+            raise ValueError()
+
     def generate(self):
         """Parse the JSON specifications file and generate the output files."""
-        with open(self.json_specification_file_path, "r") as json_file_buffer:
-            json_file_content: List[dict] = json.load(json_file_buffer)
-            scenarios: List[LocustScenario] = [
-                LocustScenario(**scenario) for scenario in json_file_content
-            ]
-            self.__generate_base_structure()
-            shutil.copytree(
-                STATIC_CODE_FOLDER, GENERATED_FOLDER, dirs_exist_ok=True
-            )
-            file_name_to_content = {}
-            for scenario in scenarios:
-                scenario_name_snake_case = string_to_snake_case(scenario.name)
-                file_name_to_content[
-                    self.__get_requests_file_path(scenario_name_snake_case)
-                ] = self.__generate_requests(scenario)
-                file_name_to_content[
-                    self.__get_taskset_file_path(scenario_name_snake_case)
-                ] = self.__generate_tasks(scenario)
-                file_name_to_content[
-                    self.__get_scenario_file_path(scenario_name_snake_case)
-                ] = self.___generate_scenario(scenario)
-
-            for file_name, file_content in file_name_to_content.items():
-                self.__write_file(file_name, file_content)
+        file_content: List[dict] = self.__load_content(
+            self.specification_file_path
+        )
+        scenarios: List[LocustScenario] = [
+            LocustScenario(**scenario) for scenario in file_content
+        ]
+        self.__generate_base_structure()
+        shutil.copytree(
+            STATIC_CODE_FOLDER, GENERATED_FOLDER, dirs_exist_ok=True
+        )
+        file_name_to_content = {}
+        for scenario in scenarios:
+            scenario_name_snake_case = string_to_snake_case(scenario.name)
+            file_name_to_content[
+                self.__get_requests_file_path(scenario_name_snake_case)
+            ] = self.__generate_requests(scenario)
+            file_name_to_content[
+                self.__get_taskset_file_path(scenario_name_snake_case)
+            ] = self.__generate_tasks(scenario)
+            file_name_to_content[
+                self.__get_scenario_file_path(scenario_name_snake_case)
+            ] = self.___generate_scenario(scenario)
+        for file_name, file_content in file_name_to_content.items():
+            self.__write_file(file_name, file_content)

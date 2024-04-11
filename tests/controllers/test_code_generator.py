@@ -41,7 +41,7 @@ class TestCodeGenerator(unittest.TestCase):
     @staticmethod
     def test_code_generation():
         test_spec = "tests/controllers/spec_files/spec.json"
-        generator = CodeGenerator(json_specification_file_path=test_spec)
+        generator = CodeGenerator(specification_file_path=test_spec)
         generator.generate()
         assert are_folders_equal(
             "tests/controllers/golden_paths/spec/generated", "generated"
@@ -49,7 +49,7 @@ class TestCodeGenerator(unittest.TestCase):
 
     def test_code_generation_error(self):
         test_spec = "tests/controllers/spec_files/spec_error.json"
-        generator = CodeGenerator(json_specification_file_path=test_spec)
+        generator = CodeGenerator(specification_file_path=test_spec)
 
         with self.assertRaises(ValidationError):
             generator.generate()
