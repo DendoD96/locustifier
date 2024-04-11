@@ -147,6 +147,7 @@ class CodeGenerator:
         with open(file_name, "w") as file:
             file.write(file_content)
 
+    @staticmethod
     def __load_content(spec_file_path: str) -> List[dict]:
         with open(spec_file_path, "r") as file_buffer:
             content = file_buffer.read()
