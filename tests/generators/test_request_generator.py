@@ -18,10 +18,12 @@ class TestRequestGenerator(unittest.TestCase):
         The request path contains path_params.
         """
         expected = """
+        import inspect
         from fake.module import generate_value
 
         def update_user(client):
             client.request(
+                name=inspect.currentframe().f_code.co_name,
                 method="PUT",
                 url="/user/123",
                 headers={"accept": "application/json"},
@@ -61,10 +63,12 @@ class TestRequestGenerator(unittest.TestCase):
         format.
         """
         expected = """
+            import inspect
             from fake.module import generate_value
 
             def update_user(client):
                 client.request(
+                    name=inspect.currentframe().f_code.co_name,
                     method="POST",
                     url="/user",
                     headers={"accept": "application/json"},

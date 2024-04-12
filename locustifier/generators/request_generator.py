@@ -8,10 +8,12 @@ from locustifier.utils import string_to_snake_case
 
 REQUEST_CODE_TEMPLATE = """
 def {function_name}(client):
-    client.request(method='{method}', url='{url}', {optional_parameters})
+    client.request(name=inspect.currentframe().f_code.co_name, \
+        method='{method}', url='{url}', {optional_parameters})
 """
 
 REQUESTS_FILE_BASE_STRUCTURE = """
+import inspect
 from {request_utils_module} import generate_value
 
 {requests_code}
