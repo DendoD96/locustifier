@@ -9,7 +9,8 @@ setup(
     version=locustifier.__version__,
     author="Daniele Rossi",
     author_email="daniele.rossi18@studio.unibo.it",
-    description="Locustifier is designed to streamline the process of generating Locustfiles from JSON or Yaml specifications.",
+    description="Locustifier is designed to streamline the process of \
+        generating Locustfiles from JSON or Yaml specifications.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/DendoD96/locustifier",
