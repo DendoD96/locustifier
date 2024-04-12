@@ -1,7 +1,7 @@
 import unittest
 from typer.testing import CliRunner
 
-from sample import __app_name__, __version__, cli
+from locustifier import __app_name__, __version__, cli
 
 
 class TestCli(unittest.TestCase):

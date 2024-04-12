@@ -2,8 +2,8 @@ import textwrap
 from typing import List
 
 from black import FileMode, format_str
-from sample.generators.task_generator import generate_locust_task_code
-from sample.models.locust_taskset import LocustTaskSet
+from locustifier.generators.task_generator import generate_locust_task_code
+from locustifier.models.locust_taskset import LocustTaskSet
 
 
 TASK_FILE_BASE_STRUCTURE = """

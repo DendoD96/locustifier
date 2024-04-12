@@ -1,6 +1,6 @@
 import unittest
 
-from sample.utils import string_to_snake_case, string_to_upper_camel_case
+from locustifier.utils import string_to_snake_case, string_to_upper_camel_case
 
 
 class TestUtils(unittest.TestCase):

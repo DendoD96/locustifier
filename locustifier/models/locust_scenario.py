@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from sample.models.locust_taskset import LocustTaskSet
+from locustifier.models.locust_taskset import LocustTaskSet
 
 
 class LocustScenario(LocustTaskSet):
@@ -17,4 +17,4 @@ class LocustScenario(LocustTaskSet):
     name: str
     description: Optional[str]
     wait: int | List[int]
-    host: str
+    host: Optional[str]

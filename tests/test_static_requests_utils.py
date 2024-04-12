@@ -1,6 +1,6 @@
 import unittest
 
-from static.requests.utils import generate_value
+from locustifier.controllers.static.requests.utils import generate_value
 
 
 class TestStaticRequestUtils(unittest.TestCase):

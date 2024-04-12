@@ -2,9 +2,9 @@ import textwrap
 import unittest
 
 from black import FileMode, format_str
-from sample.generators.request_generator import generate_requests_code
+from locustifier.generators.request_generator import generate_requests_code
 
-from sample.models.locust_taskset import LocustTaskSet
+from locustifier.models.locust_taskset import LocustTaskSet
 
 
 class TestRequestGenerator(unittest.TestCase):

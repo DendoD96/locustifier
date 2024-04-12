@@ -1,7 +1,7 @@
 from typing import List
 from pydantic import BaseModel
 
-from sample.models.locust_task import LocustTask
+from locustifier.models.locust_task import LocustTask
 
 
 class LocustTaskSet(BaseModel):

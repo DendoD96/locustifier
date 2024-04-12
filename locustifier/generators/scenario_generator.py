@@ -1,6 +1,6 @@
 from black import FileMode, format_str
-from sample.models.locust_scenario import LocustScenario
-from sample.utils import string_to_upper_camel_case
+from locustifier.models.locust_scenario import LocustScenario
+from locustifier.utils import string_to_upper_camel_case
 
 
 SCENARIO_FILE_BASE_STRUCTURE = """
@@ -38,12 +38,16 @@ def generate_scenario(
             scenario_name=scenario_name,
             host=scenario.host,
             task_class=f"{scenario_name}Tasks",
-            min_wait=scenario.wait
-            if isinstance(scenario.wait, int)
-            else scenario.wait[0],
-            max_wait=scenario.wait
-            if isinstance(scenario.wait, int)
-            else scenario.wait[1],
+            min_wait=(
+                scenario.wait
+                if isinstance(scenario.wait, int)
+                else scenario.wait[0]
+            ),
+            max_wait=(
+                scenario.wait
+                if isinstance(scenario.wait, int)
+                else scenario.wait[1]
+            ),
         ),
         mode=FileMode(),
     )

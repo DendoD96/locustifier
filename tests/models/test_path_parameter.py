@@ -2,7 +2,7 @@ import unittest
 
 from pydantic import ValidationError
 
-from sample.models.path_parameter import PathParameter
+from locustifier.models.path_parameter import PathParameter
 
 
 class TestPathParameter(unittest.TestCase):

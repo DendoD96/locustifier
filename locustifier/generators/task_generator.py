@@ -1,7 +1,7 @@
 import textwrap
 from black import FileMode, format_str
 
-from sample.models.locust_task import LocustTask
+from locustifier.models.locust_task import LocustTask
 
 
 LOCUST_TASK_CODE_TEMPLATE = """

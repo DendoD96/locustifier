@@ -27,7 +27,7 @@ install-test: venv
 	$(VENV_PIP) install -r test-requirements.txt
 
 lint: venv
-	$(VENV_PYTHON) $(VENV_FLAKE8) sample/ tests/
+	$(VENV_PYTHON) $(VENV_FLAKE8) locustifier/ tests/
 
 test: venv install-test
 	$(VENV_PYTHON) -m unittest discover -s tests -v

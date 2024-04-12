@@ -3,8 +3,8 @@ from typing import Optional
 from pydantic import ValidationError
 import typer
 
-from sample import __app_name__, __version__
-from sample.controllers.code_generator import CodeGenerator
+from locustifier import __app_name__, __version__
+from locustifier.controllers.code_generator import CodeGenerator
 
 app = typer.Typer(no_args_is_help=True)
 
@@ -35,9 +35,9 @@ def generate(
             fg=typer.colors.RED,
         )
         raise typer.Exit(1)
-    except FileNotFoundError:
+    except FileNotFoundError as error:
         typer.secho(
-            "Specification file not found.",
+            f"Specification file not found. Details: {error}",
             fg=typer.colors.RED,
         )
         raise typer.Exit(1)

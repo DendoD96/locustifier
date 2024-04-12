@@ -1,8 +1,8 @@
 from http import HTTPMethod
 from typing import List, Optional
 from pydantic import BaseModel, validator
-from sample.models.fake_body_parameter import FakeBodyParameter
-from sample.models.path_parameter import PathParameter
+from locustifier.models.fake_body_parameter import FakeBodyParameter
+from locustifier.models.path_parameter import PathParameter
 
 
 class LocustTask(BaseModel):

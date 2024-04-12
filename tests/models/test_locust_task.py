@@ -1,6 +1,6 @@
 import unittest
 from pydantic import ValidationError
-from sample.models.locust_task import LocustTask
+from locustifier.models.locust_task import LocustTask
 
 
 class TestLocustTask(unittest.TestCase):

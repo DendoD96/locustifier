@@ -1,7 +1,7 @@
 import unittest
 
-from sample.models.locust_task import LocustTask
-from sample.models.locust_taskset import LocustTaskSet
+from locustifier.models.locust_task import LocustTask
+from locustifier.models.locust_taskset import LocustTaskSet
 
 
 class TestLocustTaskSet(unittest.TestCase):

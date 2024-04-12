@@ -5,15 +5,15 @@ import os
 import shutil
 from typing import List
 
-from sample.generators.request_generator import generate_requests_code
-from sample.generators.scenario_generator import generate_scenario
+from locustifier.generators.request_generator import generate_requests_code
+from locustifier.generators.scenario_generator import generate_scenario
 
-from sample.generators.taskset_generator import generate_taskset
+from locustifier.generators.taskset_generator import generate_taskset
 
-from sample.models.locust_scenario import LocustScenario
-from sample.utils import string_to_snake_case, string_to_upper_camel_case
+from locustifier.models.locust_scenario import LocustScenario
+from locustifier.utils import string_to_snake_case, string_to_upper_camel_case
 
-STATIC_CODE_FOLDER = "static"
+STATIC_CODE_FOLDER = os.path.join(os.path.dirname(__file__), "static")
 REQUEST_UTILS_FILE_NAME = "utils"
 GENERATED_FOLDER = "generated"
 REQUEST_FOLDER = os.path.join(GENERATED_FOLDER, "requests")

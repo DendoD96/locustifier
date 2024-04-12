@@ -2,7 +2,7 @@ import unittest
 
 from pydantic import ValidationError
 
-from sample.models.fake_body_parameter import FakeBodyParameter
+from locustifier.models.fake_body_parameter import FakeBodyParameter
 
 
 class TestFakeBodyParameter(unittest.TestCase):

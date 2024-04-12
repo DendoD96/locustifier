@@ -1,9 +1,9 @@
 import textwrap
 from black import FileMode, format_str
 
-from sample.models.locust_task import LocustTask
-from sample.models.locust_taskset import LocustTaskSet
-from sample.utils import string_to_snake_case
+from locustifier.models.locust_task import LocustTask
+from locustifier.models.locust_taskset import LocustTaskSet
+from locustifier.utils import string_to_snake_case
 
 
 REQUEST_CODE_TEMPLATE = """

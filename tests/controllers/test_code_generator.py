@@ -5,7 +5,10 @@ import unittest
 
 from pydantic import ValidationError
 
-from sample.controllers.code_generator import GENERATED_FOLDER, CodeGenerator
+from locustifier.controllers.code_generator import (
+    GENERATED_FOLDER,
+    CodeGenerator,
+)
 
 
 def are_folders_equal(folder1, folder2):

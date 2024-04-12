@@ -1,5 +1,5 @@
 import unittest
-from sample.models.locust_scenario import LocustScenario
+from locustifier.models.locust_scenario import LocustScenario
 
 
 class TestLocustScenario(unittest.TestCase):

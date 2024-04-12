@@ -20,7 +20,7 @@ jobs:
           pip install -r test-requirements.txt
 
       - name: Run Flake8 linter
-        run: flake8 sample/ tests/
+        run: flake8 locustifier/ tests/
 
       - name: Run Python unit tests
         run: |

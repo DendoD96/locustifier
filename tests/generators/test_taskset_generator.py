@@ -2,9 +2,9 @@ import textwrap
 import unittest
 
 from black import FileMode, format_str
-from sample.generators.taskset_generator import generate_taskset
+from locustifier.generators.taskset_generator import generate_taskset
 
-from sample.models.locust_taskset import LocustTaskSet
+from locustifier.models.locust_taskset import LocustTaskSet
 
 
 class TestTasksetGenerator(unittest.TestCase):

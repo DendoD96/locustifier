@@ -2,9 +2,9 @@ import textwrap
 import unittest
 
 from black import FileMode, format_str
-from sample.generators.scenario_generator import generate_scenario
+from locustifier.generators.scenario_generator import generate_scenario
 
-from sample.models.locust_scenario import LocustScenario
+from locustifier.models.locust_scenario import LocustScenario
 
 
 class TestScenarioGenerator(unittest.TestCase):
