@@ -4,10 +4,10 @@ from locustifier.utils import string_to_upper_camel_case
 
 
 SCENARIO_FILE_BASE_STRUCTURE = """
-from locust import HttpUser, between
+from locust import FastHttpUser, between
 from {taskset_module} import {taskset_class}
 
-class {scenario_name}(HttpUser):
+class {scenario_name}(FastHttpUser):
     host = '{host}'
     tasks = [{task_class}]
     wait_time = between({min_wait}, {max_wait})

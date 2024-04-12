@@ -18,10 +18,10 @@ class TestScenarioGenerator(unittest.TestCase):
         wait_time.
         """
         expected = """
-            from locust import HttpUser, between
+            from locust import FastHttpUser, between
             from fake.module import UserScenario
 
-            class UserScenario(HttpUser):
+            class UserScenario(FastHttpUser):
                 host = \"http://localhost:8080\"
                 tasks = [UserScenarioTasks]
                 wait_time = between(2, 5)
@@ -50,10 +50,10 @@ class TestScenarioGenerator(unittest.TestCase):
         wait_time.
         """
         expected = """
-            from locust import HttpUser, between
+            from locust import FastHttpUser, between
             from fake.module import UserScenario
 
-            class UserScenario(HttpUser):
+            class UserScenario(FastHttpUser):
                 host = \"http://localhost:8080\"
                 tasks = [UserScenarioTasks]
                 wait_time = between(2, 2)
