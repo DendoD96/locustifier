@@ -17,6 +17,7 @@ setup(
     license="GPL-3.0-only",
     python_requires=">=3.11",
     install_requires=requirements,
+    scripts=["sample/locustifier"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GPL-3.0-only",
