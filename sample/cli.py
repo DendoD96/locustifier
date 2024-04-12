@@ -6,7 +6,7 @@ import typer
 from sample import __app_name__, __version__
 from sample.controllers.code_generator import CodeGenerator
 
-app = typer.Typer()
+app = typer.Typer(no_args_is_help=True)
 
 
 def _version_callback(value: bool) -> None:
