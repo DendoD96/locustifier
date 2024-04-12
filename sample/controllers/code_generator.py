@@ -1,4 +1,5 @@
 import json
+from jinja2 import Template
 import yaml
 import os
 import shutil
@@ -151,13 +152,16 @@ class CodeGenerator:
     def __load_content(spec_file_path: str) -> List[dict]:
         with open(spec_file_path, "r") as file_buffer:
             content = file_buffer.read()
+            template = Template(content)
+            rendered_content = template.render()
+
             try:
-                return json.loads(content)
+                return json.loads(rendered_content)
             except json.JSONDecodeError:
                 pass
 
             try:
-                return yaml.safe_load(content)
+                return yaml.safe_load(rendered_content)
             except yaml.YAMLError:
                 pass
 
