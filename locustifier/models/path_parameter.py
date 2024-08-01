@@ -2,30 +2,6 @@ from enum import Enum
 from typing import Literal, Optional
 from pydantic import BaseModel
 
-
-class PathParameterStyle(str, Enum):
-    """
-    Enumeration representing different styles for path parameters.
-
-    This enumeration defines styles for path parameters, which can be used to
-    specify how parameters should be included in a URL path.
-
-    Enumeration Values:
-    - `simple`: Parameters are included as part of the path as-is.
-    - `label`: Parameters are included as path segments with a label.
-    - `matrix`: Parameters are included in a matrix within the path.
-
-    Example:
-    ```python
-    style = PathParameterStyle.label
-    ```
-    """
-
-    simple = "simple"
-    label = "label"
-    matrix = "matrix"
-
-
 class PathParameter(BaseModel):
     """
     Pydantic model representing a path parameter in a URL.

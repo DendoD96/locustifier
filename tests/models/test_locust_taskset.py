@@ -12,6 +12,25 @@ class TestLocustTaskSet(unittest.TestCase):
     def test_simple_taskset_generation(self):
         """Test creating an instance of LocustTaskSet with valid input."""
         data = {
+            "tasks": []
+        }
+        instance = LocustTaskSet(**data)
+
+        # Assert that the instance is of MyModel
+        self.assertIsInstance(instance, LocustTaskSet)
+
+    def test_sequential_taskset_generation(self):
+        """Test creating an instance of sequential LocustTaskSet."""
+        data = {
+            "is_sequential": True,
+            "tasks": []
+        }
+        instance = LocustTaskSet(**data)
+        self.assertTrue(instance.is_sequential)
+
+    def test_taskset_task_generation(self):
+        """Test creating an instance of LocustTaskSet with valid input."""
+        data = {
             "tasks": [
                 {
                     "name": "get_user",
@@ -32,13 +51,8 @@ class TestLocustTaskSet(unittest.TestCase):
         }
         instance = LocustTaskSet(**data)
 
-        # Assert that the instance is of MyModel
-        self.assertIsInstance(instance, LocustTaskSet)
         self.assertIsInstance(instance.tasks[0], LocustTask)
-
-        # Assert that the values match the input data
         self.assertEqual(len(instance.tasks), 2)
-
 
 if __name__ == "__main__":
     unittest.main()

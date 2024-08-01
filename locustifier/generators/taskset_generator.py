@@ -8,10 +8,10 @@ from locustifier.models.locust_taskset import LocustTaskSet
 
 TASK_FILE_BASE_STRUCTURE = """
 from {requests_module} import {requests_file}
-from locust import task, TaskSet
+from locust import task, {taskset_type}
 
 
-class {task_set_name}(TaskSet):
+class {task_set_name}({taskset_type}):
 {task_list}
 """
 
@@ -46,6 +46,8 @@ def generate_taskset(
             requests_module=requests_module,
             requests_file=requests_file,
             task_list=textwrap.indent("\n".join(tasks), "    "),
+            taskset_type="SequentialTaskSet" if taskset.is_sequential
+            else "TaskSet"
         ),
         mode=FileMode(),
     )

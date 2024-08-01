@@ -17,3 +17,4 @@ class LocustTaskSet(BaseModel):
     """
 
     tasks: List[LocustTask]
+    is_sequential: bool = False
