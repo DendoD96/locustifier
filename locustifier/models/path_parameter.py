@@ -1,6 +1,6 @@
-from enum import Enum
 from typing import Literal, Optional
 from pydantic import BaseModel
+
 
 class PathParameter(BaseModel):
     """
@@ -24,7 +24,7 @@ class PathParameter(BaseModel):
 
     name: str
     value: int | float | bool | str | list
-    style: Optional[
-        Literal["simple", "label", "matrix"]
-    ] = "simple"  # Default from OpenAPI spec
+    style: Optional[Literal["simple", "label", "matrix"]] = (
+        "simple"  # Default from OpenAPI spec
+    )
     explode: Optional[bool] = False  # Default from OpenAPI spec

@@ -54,5 +54,6 @@ class TestLocustTaskSet(unittest.TestCase):
         self.assertIsInstance(instance.tasks[0], LocustTask)
         self.assertEqual(len(instance.tasks), 2)
 
+
 if __name__ == "__main__":
     unittest.main()

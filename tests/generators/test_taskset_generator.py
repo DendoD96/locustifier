@@ -6,7 +6,13 @@ from locustifier.generators.taskset_generator import generate_taskset
 
 from locustifier.models.locust_taskset import LocustTaskSet
 
-def get_expected_stub(request_module: str, request_file: str, taskset_name: str, taskset_type: str) -> str:
+
+def get_expected_stub(
+    request_module: str,
+    request_file: str,
+    taskset_name: str,
+    taskset_type: str,
+) -> str:
     return f"""
         from {request_module} import {request_file}
         from locust import task, {taskset_type}
@@ -21,6 +27,7 @@ def get_expected_stub(request_module: str, request_file: str, taskset_name: str,
             def get_users(self):
                 requests.get_users(self.client)
         """
+
 
 class TestTasksetGenerator(unittest.TestCase):
     # Necessary to print multiline test description.
@@ -66,10 +73,14 @@ class TestTasksetGenerator(unittest.TestCase):
         self.assertEqual(
             generated_locust_tasksset_code,
             format_str(
-                textwrap.dedent(get_expected_stub(request_file=request_file, 
-                                                  request_module=request_module, 
-                                                  taskset_name=taskset_name, 
-                                                  taskset_type="TaskSet")),
+                textwrap.dedent(
+                    get_expected_stub(
+                        request_file=request_file,
+                        request_module=request_module,
+                        taskset_name=taskset_name,
+                        taskset_type="TaskSet",
+                    )
+                ),
                 mode=FileMode(),
             ),
         )
@@ -110,18 +121,22 @@ class TestTasksetGenerator(unittest.TestCase):
             requests_module=request_module,
             requests_file=request_file,
             taskset_name=taskset_name,
-
         )
         self.assertEqual(
             generated_locust_tasksset_code,
             format_str(
-                textwrap.dedent(get_expected_stub(request_file=request_file, 
-                                                  request_module=request_module, 
-                                                  taskset_name=taskset_name, 
-                                                  taskset_type="SequentialTaskSet")),
+                textwrap.dedent(
+                    get_expected_stub(
+                        request_file=request_file,
+                        request_module=request_module,
+                        taskset_name=taskset_name,
+                        taskset_type="SequentialTaskSet",
+                    )
+                ),
                 mode=FileMode(),
             ),
         )
+
 
 if __name__ == "__main__":
     unittest.main()
