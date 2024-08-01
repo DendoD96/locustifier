@@ -15,6 +15,7 @@ class LocustScenario(LocustTaskSet):
     """
 
     name: str
-    description: Optional[str]
+    description: Optional[str] = None
     wait: int | List[int]
-    host: Optional[str]
+    host: Optional[str] = None
+    weight: Optional[int] = 1

@@ -11,6 +11,7 @@ class {scenario_name}(FastHttpUser):
     host = '{host}'
     tasks = [{task_class}]
     wait_time = between({min_wait}, {max_wait})
+    weight = {weight}
 """
 
 
@@ -48,6 +49,7 @@ def generate_scenario(
                 if isinstance(scenario.wait, int)
                 else scenario.wait[1]
             ),
+            weight=scenario.weight,
         ),
         mode=FileMode(),
     )

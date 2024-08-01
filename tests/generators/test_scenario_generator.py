@@ -25,6 +25,7 @@ class TestScenarioGenerator(unittest.TestCase):
                 host = \"http://localhost:8080\"
                 tasks = [UserScenarioTasks]
                 wait_time = between(2, 5)
+                weight = 1
         """
         data = {
             "name": "user scenario",
@@ -57,6 +58,7 @@ class TestScenarioGenerator(unittest.TestCase):
                 host = \"http://localhost:8080\"
                 tasks = [UserScenarioTasks]
                 wait_time = between(2, 2)
+                weight = 1
         """
         data = {
             "name": "user scenario",

@@ -6,3 +6,4 @@ class UserScenario(FastHttpUser):
     host = "http://localhost:8080"
     tasks = [UserScenarioTasks]
     wait_time = between(2, 5)
+    weight = 1
