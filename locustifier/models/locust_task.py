@@ -1,7 +1,10 @@
 from http import HTTPMethod
 from typing import List, Optional
 from pydantic import BaseModel, validator
-from locustifier.models.fake_body_parameter import FakeBodyParameter
+from locustifier.models.fake_body_parameter import (
+    FakeBodyParameter,
+    ValueBodyParameter,
+)
 from locustifier.models.path_parameter import PathParameter
 
 
@@ -34,7 +37,7 @@ class LocustTask(BaseModel):
     query_params: Optional[dict] = None
     headers: Optional[dict] = None
     weight: Optional[int] = 1
-    req_body: Optional[List[FakeBodyParameter]] = None
+    req_body: Optional[List[FakeBodyParameter | ValueBodyParameter]] = None
 
     @validator("req_body", pre=True, always=True)
     def check_conditional_field(cls, value, values):
